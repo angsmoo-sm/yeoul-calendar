@@ -87,7 +87,8 @@
         </div>
       </div>
 
-      <div id="calendarDisplayContainer" class="pt-1 overflow-x-auto">
+      <!-- 모바일 가로 스크롤 컨테이너 적용 -->
+      <div id="calendarDisplayContainer" class="pt-1 overflow-x-auto pb-2">
         <!-- 자바스크립트로 동적 생성됨 -->
       </div>
     </div>
@@ -316,7 +317,8 @@
 
       const container = document.getElementById('calendarDisplayContainer');
       const grid = document.createElement('div');
-      grid.className = 'grid grid-cols-7 gap-1 sm:gap-2 text-center min-w-[300px]';
+      // 모바일에서 찌그러짐 방지를 위해 최소 너비(min-w-[420px]) 설정 및 가로 정렬 고정
+      grid.className = 'grid grid-cols-7 gap-1 sm:gap-2 text-center min-w-[420px]';
 
       const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
       weekDays.forEach((day, idx) => {
@@ -351,17 +353,18 @@
         if (dayOfWeek === 6) dateNumColor = 'text-sky-600';
 
         let borderStyle = isToday ? 'border-2 border-orange-500 bg-orange-50/30' : 'border border-slate-200 bg-white';
-        dayCell.className = `calendar-day-box ${borderStyle} p-1 sm:p-1.5 rounded-lg sm:rounded-xl flex flex-col justify-between text-left shadow-2xs hover:border-orange-300 transition overflow-hidden`;
+        // 패딩을 모바일에서 p-0.5로 살짝 줄여서 글자가 칸 밖으로 안 나가게 안전하게 보호
+        dayCell.className = `calendar-day-box ${borderStyle} p-0.5 sm:p-1.5 rounded-lg sm:rounded-xl flex flex-col justify-between text-left shadow-2xs hover:border-orange-300 transition overflow-hidden`;
 
         let cellHTML = `<div class="font-extrabold text-[11px] sm:text-sm ${dateNumColor} ${isToday ? 'bg-orange-500 text-white w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[9px]' : ''}">${d}</div>`;
 
         const dayItem = eventsByDate[dateStr] || { evt18: null, evt20: null };
         
-        let eventsContainerHTML = `<div class="mt-1 space-y-1 w-full flex flex-col justify-end overflow-y-auto max-h-[70px] sm:max-h-[95px] pr-0.5">`;
+        let eventsContainerHTML = `<div class="mt-1 space-y-0.5 sm:space-y-1 w-full flex flex-col justify-end overflow-y-auto max-h-[70px] sm:max-h-[95px] pr-0.5">`;
         
         if (dayItem.evt18) {
           eventsContainerHTML += `
-            <div class="bg-emerald-100/70 border border-emerald-300/60 p-0.5 sm:p-1 rounded text-[9px] sm:text-[11px] leading-snug text-emerald-950 font-bold shadow-2xs">
+            <div class="bg-emerald-100/70 border border-emerald-300/60 p-0.5 sm:p-1 rounded text-[8.5px] sm:text-[11px] leading-tight text-emerald-950 font-bold shadow-2xs truncate">
               ${dayItem.evt18.title}
             </div>
           `;
@@ -369,7 +372,7 @@
         
         if (dayItem.evt20) {
           eventsContainerHTML += `
-            <div class="bg-amber-100/80 border border-amber-300/70 p-0.5 sm:p-1 rounded text-[9px] sm:text-[11px] leading-snug text-amber-950 font-bold shadow-2xs">
+            <div class="bg-amber-100/80 border border-amber-300/70 p-0.5 sm:p-1 rounded text-[8.5px] sm:text-[11px] leading-tight text-amber-950 font-bold shadow-2xs truncate">
               ${dayItem.evt20.title}
             </div>
           `;
