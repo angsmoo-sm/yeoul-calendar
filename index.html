@@ -38,12 +38,16 @@
       transform: translateY(2px);
       box-shadow: 0 1px 0 0 #cbd5e1;
     }
+    /* 모바일: 1줄 요약에 맞는 슬림한 고정 높이 */
     .calendar-day-box {
-      min-height: 85px;
+      min-height: 55px;
+      height: 55px;
     }
+    /* PC(sm 이상): 불필요한 여백을 없애고 18시/20시 2줄에 딱 맞춰 높이 최적화 */
     @media (min-width: 640px) {
       .calendar-day-box {
-        min-height: 110px;
+        min-height: 98px;
+        height: 98px;
       }
     }
   </style>
@@ -118,7 +122,7 @@
           <input type="month" id="endMonthInput" class="w-full min-w-0 px-2.5 sm:px-3 py-2 sm:py-2.5 bg-white border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-800 font-bold outline-none focus:ring-2 focus:ring-orange-400 transition shadow-inner">
         </div>
         
-        <button onclick="loadCalendarData()" class="w-full sm:w-auto px-5 py-2 sm:py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-black rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5 btn-3d-primary transition shadow-sm shrink-0">
+        <button onclick="loadStatsData()" class="w-full sm:w-auto px-5 py-2 sm:py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-black rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5 btn-3d-primary transition shadow-sm shrink-0">
           <span>조회하기</span>
         </button>
       </div>
@@ -235,7 +239,9 @@
 
     let monthlyChartInstance = null;
     let attendeeChartInstance = null;
-    let rawEventsList = [];
+    
+    let calendarEventsList = [];
+    let statsEventsList = [];
 
     let currentViewMode = 'calendar';
     let currentViewDate = new Date();
@@ -258,7 +264,8 @@
         document.getElementById('startMonthInput').value = formatYearMonth(threeMonthsAgo);
       }
 
-      loadCalendarData();
+      loadCalendarMonthData();
+      loadStatsData();
     };
 
     function formatYearMonth(date) {
@@ -267,7 +274,31 @@
       return `${y}-${m}`;
     }
 
-    async function loadCalendarData() {
+    async function loadCalendarMonthData() {
+      const year = currentViewDate.getFullYear();
+      const month = currentViewDate.getMonth() + 1;
+
+      const startDate = new Date(year, month - 1, 1, 0, 0, 0);
+      const endDate = new Date(year, month, 1, 0, 0, 0);
+
+      const timeMinParam = `&timeMin=${startDate.toISOString()}`;
+      const timeMaxParam = `&timeMax=${endDate.toISOString()}`;
+
+      const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&maxResults=2500&singleEvents=true&orderBy=startTime${timeMinParam}${timeMaxParam}`;
+
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('일정 데이터를 불러오지 못했습니다.');
+        
+        const data = await res.json();
+        calendarEventsList = data.items || [];
+        renderCalendarSection();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function loadStatsData() {
       const startMonth = document.getElementById('startMonthInput').value;
       const endMonth = document.getElementById('endMonthInput').value;
 
@@ -294,13 +325,12 @@
 
       try {
         const res = await fetch(url);
-        if (!res.ok) throw new Error('데이터를 불러오지 못했습니다. 설정 및 네트워크를 확인하세요.');
+        if (!res.ok) throw new Error('통계 데이터를 불러오지 못했습니다.');
         
         const data = await res.json();
-        rawEventsList = data.items || [];
+        statsEventsList = data.items || [];
         
-        processCalendarData(rawEventsList);
-        renderCalendarSection();
+        processCalendarData(statsEventsList);
       } catch (err) {
         alert(err.message);
       }
@@ -325,7 +355,7 @@
 
     function changeMonth(direction) {
       currentViewDate.setMonth(currentViewDate.getMonth() + direction);
-      renderCalendarSection();
+      loadCalendarMonthData();
     }
 
     function renderCalendarSection() {
@@ -343,7 +373,6 @@
 
       const container = document.getElementById('calendarDisplayContainer');
       const grid = document.createElement('div');
-      // 간격을 0.5px~1px 수준(gap-0.5)으로 바짝 붙여서 달력 폭을 최대한 넓게 활용
       grid.className = 'grid grid-cols-7 gap-0.5 sm:gap-2 text-center w-full';
 
       const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
@@ -352,7 +381,7 @@
         let textColor = 'text-slate-600';
         if (idx === 0) textColor = 'text-rose-500';
         if (idx === 6) textColor = 'text-sky-600';
-        header.className = `font-black text-[11px] sm:text-sm py-1.5 sm:py-2 ${textColor}`;
+        header.className = `font-black text-[11px] sm:text-sm py-1 sm:py-1.5 ${textColor}`;
         header.innerText = day;
         grid.appendChild(header);
       });
@@ -379,8 +408,7 @@
         if (dayOfWeek === 6) dateNumColor = 'text-sky-600';
 
         let borderStyle = isToday ? 'border-2 border-orange-500 bg-orange-50/30' : 'border border-slate-200 bg-white';
-        // 모바일 내부 패딩을 p-0.5로 대폭 줄여서 금18/0, 금20/5가 여유 있게 들어가도록 확보
-        dayCell.className = `calendar-day-box ${borderStyle} p-0.5 sm:p-1.5 rounded-md sm:rounded-xl flex flex-col justify-between text-left shadow-2xs hover:border-orange-300 transition overflow-hidden`;
+        dayCell.className = `calendar-day-box ${borderStyle} p-0.5 sm:p-1 rounded-md sm:rounded-xl flex flex-col justify-start text-left shadow-2xs hover:border-orange-300 transition overflow-hidden space-y-0.5 sm:space-y-1`;
 
         let cellHTML = `<div class="font-extrabold text-[10px] sm:text-sm ${dateNumColor} ${isToday ? 'bg-orange-500 text-white w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[9px]' : ''}">${d}</div>`;
 
@@ -392,22 +420,24 @@
           dayCell.onclick = () => openModal(dateStr, dayItem);
         }
         
-        let eventsContainerHTML = `<div class="mt-0.5 space-y-0.5 w-full flex flex-col justify-end overflow-hidden">`;
+        let eventsContainerHTML = `<div class="space-y-0.5 w-full flex flex-col overflow-hidden">`;
         
         if (dayItem.evt18) {
-          const shortTitle = getShortSummary(dayItem.evt18.title);
+          const titleText = dayItem.evt18.title;
           eventsContainerHTML += `
-            <div class="bg-emerald-100/80 border border-emerald-300/70 px-0.5 py-0.5 rounded text-[8px] sm:text-[10px] leading-tight text-emerald-950 font-bold truncate">
-              ${shortTitle}
+            <div class="bg-emerald-100/80 border border-emerald-300/70 px-0.5 sm:px-1 py-0.5 rounded text-[8px] sm:text-[10px] leading-tight text-emerald-950 font-bold sm:line-clamp-2 sm:overflow-hidden sm:text-ellipsis">
+              <span class="sm:hidden truncate block">${getShortSummary(titleText)}</span>
+              <span class="hidden sm:block">${titleText}</span>
             </div>
           `;
         }
         
         if (dayItem.evt20) {
-          const shortTitle = getShortSummary(dayItem.evt20.title);
+          const titleText = dayItem.evt20.title;
           eventsContainerHTML += `
-            <div class="bg-amber-100/90 border border-amber-300/80 px-0.5 py-0.5 rounded text-[8px] sm:text-[10px] leading-tight text-amber-950 font-bold truncate">
-              ${shortTitle}
+            <div class="bg-amber-100/90 border border-amber-300/80 px-0.5 sm:px-1 py-0.5 rounded text-[8px] sm:text-[10px] leading-tight text-amber-950 font-bold sm:line-clamp-2 sm:overflow-hidden sm:text-ellipsis">
+              <span class="sm:hidden truncate block">${getShortSummary(titleText)}</span>
+              <span class="hidden sm:block">${titleText}</span>
             </div>
           `;
         }
@@ -425,7 +455,6 @@
 
     function getShortSummary(title) {
       if (!title) return '';
-      // "금18/0", "금20/5" 등 핵심 코드가 잘리지 않도록 8글자 허용
       if (title.length > 8) {
         return title.substring(0, 8) + '…';
       }
@@ -441,7 +470,7 @@
       container.innerHTML = '';
 
       const targetMonthStr = `${year}-${String(month).padStart(2, '0')}`;
-      const filteredEvents = rawEventsList.filter(evt => {
+      const filteredEvents = calendarEventsList.filter(evt => {
         const startRaw = evt.start?.dateTime || evt.start?.date;
         return startRaw && startRaw.startsWith(targetMonthStr);
       });
@@ -514,7 +543,7 @@
 
     function getGroupedEventsMapFull() {
       const eventsByDate = {};
-      rawEventsList.forEach(evt => {
+      calendarEventsList.forEach(evt => {
         const startRaw = evt.start?.dateTime || evt.start?.date;
         if (!startRaw) return;
         const dateKey = startRaw.substring(0, 10);
