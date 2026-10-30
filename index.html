@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>여울귀신 일정표</title>
+  
+  <!-- 카카오톡 및 SNS 공유 미리보기 설정 -->
+  <meta property="og:title" content="여울귀신 일정표">
+  <meta property="og:description" content="구글 캘린더 일정을 실시간 분석합니다.">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
@@ -34,16 +39,16 @@
       box-shadow: 0 1px 0 0 #cbd5e1;
     }
     .calendar-day-box {
-      min-height: 95px;
+      min-height: 85px;
     }
     @media (min-width: 640px) {
       .calendar-day-box {
-        min-height: 115px;
+        min-height: 110px;
       }
     }
   </style>
 </head>
-<body class="text-slate-900 min-h-screen p-2.5 sm:p-6 md:p-8 antialiased text-xs sm:text-base">
+<body class="text-slate-900 min-h-screen p-2 sm:p-6 md:p-8 antialiased text-xs sm:text-base">
   <div class="max-w-7xl mx-auto space-y-4 sm:space-y-7">
     
     <!-- 상단 히어로 타이틀 헤더 -->
@@ -63,8 +68,8 @@
     </header>
 
     <!-- 1. 최상단: 월별 모임 일정표 (월간보기 ⇄ 일정보기 전환) -->
-    <div class="card-3d p-3.5 sm:p-7 rounded-2xl sm:rounded-3xl space-y-3.5 sm:space-y-4">
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-slate-200 pb-3 sm:pb-4 gap-2.5">
+    <div class="card-3d p-2 sm:p-7 rounded-2xl sm:rounded-3xl space-y-3 sm:space-y-4">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-slate-200 pb-3 sm:pb-4 gap-2.5 px-1 sm:px-0">
         <div class="space-y-0.5">
           <div class="flex items-center gap-2">
             <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm shrink-0"></span>
@@ -74,7 +79,7 @@
         </div>
         
         <div class="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
-          <!-- 가시성을 대폭 강화한 보기 전환 버튼 -->
+          <!-- 보기 전환 버튼 -->
           <div class="inline-flex bg-slate-200/80 p-1 rounded-xl border border-slate-300 shadow-inner shrink-0">
             <button onclick="setViewMode('calendar')" id="btnModeCalendar" class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-white text-orange-600 shadow-sm flex items-center gap-1">
               <span>📅 월간보기</span>
@@ -95,7 +100,7 @@
         </div>
       </div>
 
-      <div id="calendarDisplayContainer" class="pt-1">
+      <div id="calendarDisplayContainer" class="pt-1 w-full overflow-hidden">
         <!-- 자바스크립트로 동적 생성됨 -->
       </div>
     </div>
@@ -338,7 +343,8 @@
 
       const container = document.getElementById('calendarDisplayContainer');
       const grid = document.createElement('div');
-      grid.className = 'grid grid-cols-7 gap-1 sm:gap-2 text-center';
+      // 간격을 0.5px~1px 수준(gap-0.5)으로 바짝 붙여서 달력 폭을 최대한 넓게 활용
+      grid.className = 'grid grid-cols-7 gap-0.5 sm:gap-2 text-center w-full';
 
       const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
       weekDays.forEach((day, idx) => {
@@ -358,7 +364,7 @@
 
       for (let i = 0; i < firstDay; i++) {
         const emptyCell = document.createElement('div');
-        emptyCell.className = 'calendar-day-box bg-slate-50/50 rounded-lg sm:rounded-xl border border-slate-100 opacity-40';
+        emptyCell.className = 'calendar-day-box bg-slate-50/50 rounded-md sm:rounded-xl border border-slate-100 opacity-40';
         grid.appendChild(emptyCell);
       }
 
@@ -373,9 +379,10 @@
         if (dayOfWeek === 6) dateNumColor = 'text-sky-600';
 
         let borderStyle = isToday ? 'border-2 border-orange-500 bg-orange-50/30' : 'border border-slate-200 bg-white';
-        dayCell.className = `calendar-day-box ${borderStyle} p-1 sm:p-1.5 rounded-lg sm:rounded-xl flex flex-col justify-between text-left shadow-2xs hover:border-orange-300 transition overflow-hidden`;
+        // 모바일 내부 패딩을 p-0.5로 대폭 줄여서 금18/0, 금20/5가 여유 있게 들어가도록 확보
+        dayCell.className = `calendar-day-box ${borderStyle} p-0.5 sm:p-1.5 rounded-md sm:rounded-xl flex flex-col justify-between text-left shadow-2xs hover:border-orange-300 transition overflow-hidden`;
 
-        let cellHTML = `<div class="font-extrabold text-[11px] sm:text-sm ${dateNumColor} ${isToday ? 'bg-orange-500 text-white w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[9px]' : ''}">${d}</div>`;
+        let cellHTML = `<div class="font-extrabold text-[10px] sm:text-sm ${dateNumColor} ${isToday ? 'bg-orange-500 text-white w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[9px]' : ''}">${d}</div>`;
 
         const dayItem = eventsByDate[dateStr] || { evt18: null, evt20: null };
         const hasEvents = dayItem.evt18 || dayItem.evt20;
@@ -385,12 +392,12 @@
           dayCell.onclick = () => openModal(dateStr, dayItem);
         }
         
-        let eventsContainerHTML = `<div class="mt-1 space-y-1 w-full flex flex-col justify-end overflow-hidden">`;
+        let eventsContainerHTML = `<div class="mt-0.5 space-y-0.5 w-full flex flex-col justify-end overflow-hidden">`;
         
         if (dayItem.evt18) {
           const shortTitle = getShortSummary(dayItem.evt18.title);
           eventsContainerHTML += `
-            <div class="bg-emerald-100/80 border border-emerald-300/70 px-1 py-0.5 rounded text-[8.5px] sm:text-[10px] leading-tight text-emerald-950 font-bold truncate">
+            <div class="bg-emerald-100/80 border border-emerald-300/70 px-0.5 py-0.5 rounded text-[8px] sm:text-[10px] leading-tight text-emerald-950 font-bold truncate">
               ${shortTitle}
             </div>
           `;
@@ -399,7 +406,7 @@
         if (dayItem.evt20) {
           const shortTitle = getShortSummary(dayItem.evt20.title);
           eventsContainerHTML += `
-            <div class="bg-amber-100/90 border border-amber-300/80 px-1 py-0.5 rounded text-[8.5px] sm:text-[10px] leading-tight text-amber-950 font-bold truncate">
+            <div class="bg-amber-100/90 border border-amber-300/80 px-0.5 py-0.5 rounded text-[8px] sm:text-[10px] leading-tight text-amber-950 font-bold truncate">
               ${shortTitle}
             </div>
           `;
@@ -418,7 +425,7 @@
 
     function getShortSummary(title) {
       if (!title) return '';
-      // "금18/0 (홍길동)" 형태에서 앞 7~8글자(금18/0 등)가 잘리지 않도록 길이 제한을 8글자로 상향 조정
+      // "금18/0", "금20/5" 등 핵심 코드가 잘리지 않도록 8글자 허용
       if (title.length > 8) {
         return title.substring(0, 8) + '…';
       }
