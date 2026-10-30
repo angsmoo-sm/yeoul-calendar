@@ -390,7 +390,7 @@
         if (dayItem.evt18) {
           const shortTitle = getShortSummary(dayItem.evt18.title);
           eventsContainerHTML += `
-            <div class="bg-emerald-100/80 border border-emerald-300/70 px-1 py-0.5 rounded text-[9px] sm:text-[10px] leading-tight text-emerald-950 font-bold truncate">
+            <div class="bg-emerald-100/80 border border-emerald-300/70 px-1 py-0.5 rounded text-[8.5px] sm:text-[10px] leading-tight text-emerald-950 font-bold truncate">
               ${shortTitle}
             </div>
           `;
@@ -399,7 +399,7 @@
         if (dayItem.evt20) {
           const shortTitle = getShortSummary(dayItem.evt20.title);
           eventsContainerHTML += `
-            <div class="bg-amber-100/90 border border-amber-300/80 px-1 py-0.5 rounded text-[9px] sm:text-[10px] leading-tight text-amber-950 font-bold truncate">
+            <div class="bg-amber-100/90 border border-amber-300/80 px-1 py-0.5 rounded text-[8.5px] sm:text-[10px] leading-tight text-amber-950 font-bold truncate">
               ${shortTitle}
             </div>
           `;
@@ -418,9 +418,9 @@
 
     function getShortSummary(title) {
       if (!title) return '';
-      // 예: "금18/0 (홍길동, 김철수 외)" 형태에서 글자가 길면 깔끔하게 요약 또는 제한
-      if (title.length > 9) {
-        return title.substring(0, 9) + '…';
+      // "금18/0 (홍길동)" 형태에서 앞 7~8글자(금18/0 등)가 잘리지 않도록 길이 제한을 8글자로 상향 조정
+      if (title.length > 8) {
+        return title.substring(0, 8) + '…';
       }
       return title;
     }
