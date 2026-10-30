@@ -65,15 +65,23 @@
     <!-- 1. 최상단: 월별 모임 일정표 (월간보기 ⇄ 일정보기 전환) -->
     <div class="card-3d p-3.5 sm:p-7 rounded-2xl sm:rounded-3xl space-y-3.5 sm:space-y-4">
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-slate-200 pb-3 sm:pb-4 gap-2.5">
-        <div class="flex items-center gap-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm shrink-0"></span>
-          <h2 id="calendarTitle" class="text-sm sm:text-xl font-black text-slate-800 truncate">모임 일정표</h2>
+        <div class="space-y-0.5">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm shrink-0"></span>
+            <h2 id="calendarTitle" class="text-sm sm:text-xl font-black text-slate-800 truncate">모임 일정표</h2>
+          </div>
+          <p class="text-[11px] text-slate-500 font-medium pl-4.5">💡 버튼을 눌러 달력과 목록으로 전환해 보세요!</p>
         </div>
         
         <div class="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
-          <div class="inline-flex bg-slate-100 p-0.5 sm:p-1 rounded-xl border border-slate-200 shadow-inner shrink-0">
-            <button onclick="setViewMode('calendar')" id="btnModeCalendar" class="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition bg-white text-orange-600 shadow-sm">월간보기</button>
-            <button onclick="setViewMode('list')" id="btnModeList" class="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition text-slate-600">일정보기</button>
+          <!-- 가시성을 대폭 강화한 보기 전환 버튼 -->
+          <div class="inline-flex bg-slate-200/80 p-1 rounded-xl border border-slate-300 shadow-inner shrink-0">
+            <button onclick="setViewMode('calendar')" id="btnModeCalendar" class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-white text-orange-600 shadow-sm flex items-center gap-1">
+              <span>📅 월간보기</span>
+            </button>
+            <button onclick="setViewMode('list')" id="btnModeList" class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 hover:text-slate-900 flex items-center gap-1">
+              <span>📋 일정보기</span>
+            </button>
           </div>
 
           <div class="flex items-center gap-1 shrink-0">
@@ -87,8 +95,7 @@
         </div>
       </div>
 
-      <!-- 모바일 가로 스크롤 컨테이너 적용 -->
-      <div id="calendarDisplayContainer" class="pt-1 overflow-x-auto pb-2">
+      <div id="calendarDisplayContainer" class="pt-1">
         <!-- 자바스크립트로 동적 생성됨 -->
       </div>
     </div>
@@ -203,6 +210,20 @@
 
   </div>
 
+  <!-- 일정 상세 팝업 (모달) -->
+  <div id="eventModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl p-5 sm:p-6 max-w-sm w-full shadow-2xl border border-slate-100 space-y-4 animate-in fade-in zoom-in duration-150">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 id="modalDateTitle" class="text-base sm:text-lg font-black text-slate-800">일정 상세 내용</h3>
+        <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold flex items-center justify-center transition">✕</button>
+      </div>
+      <div id="modalContentBody" class="space-y-3 max-h-[60vh] overflow-y-auto pr-1">
+        <!-- 동적 삽입 -->
+      </div>
+      <button onclick="closeModal()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs sm:text-sm transition shadow-sm">확인</button>
+    </div>
+  </div>
+
   <script>
     const API_KEY = "AIzaSyDKHKIJGfPXfyN7G7puTs8XrBZKPiBSCP0";
     const CALENDAR_ID = "aefd539b231a85ce02afd23de338fda979c6ac1b2be3ec62ee91fb6aebfdb022@group.calendar.google.com";
@@ -287,11 +308,11 @@
       const btnList = document.getElementById('btnModeList');
 
       if (mode === 'calendar') {
-        btnCal.className = "px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition bg-white text-orange-600 shadow-sm";
-        btnList.className = "px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition text-slate-600 hover:text-slate-900";
+        btnCal.className = "px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-white text-orange-600 shadow-sm flex items-center gap-1";
+        btnList.className = "px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 hover:text-slate-900 flex items-center gap-1";
       } else {
-        btnList.className = "px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition bg-white text-orange-600 shadow-sm";
-        btnCal.className = "px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition text-slate-600 hover:text-slate-900";
+        btnList.className = "px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-white text-orange-600 shadow-sm flex items-center gap-1";
+        btnCal.className = "px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 hover:text-slate-900 flex items-center gap-1";
       }
 
       renderCalendarSection();
@@ -317,8 +338,7 @@
 
       const container = document.getElementById('calendarDisplayContainer');
       const grid = document.createElement('div');
-      // 모바일에서 찌그러짐 방지를 위해 최소 너비(min-w-[420px]) 설정 및 가로 정렬 고정
-      grid.className = 'grid grid-cols-7 gap-1 sm:gap-2 text-center min-w-[420px]';
+      grid.className = 'grid grid-cols-7 gap-1 sm:gap-2 text-center';
 
       const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
       weekDays.forEach((day, idx) => {
@@ -331,7 +351,7 @@
         grid.appendChild(header);
       });
 
-      const eventsByDate = getGroupedEventsMap();
+      const eventsByDate = getGroupedEventsMapFull();
       const firstDay = new Date(year, month - 1, 1).getDay();
       const lastDate = new Date(year, month, 0).getDate();
       const todayStr = formatYearMonthDay(new Date());
@@ -353,27 +373,34 @@
         if (dayOfWeek === 6) dateNumColor = 'text-sky-600';
 
         let borderStyle = isToday ? 'border-2 border-orange-500 bg-orange-50/30' : 'border border-slate-200 bg-white';
-        // 패딩을 모바일에서 p-0.5로 살짝 줄여서 글자가 칸 밖으로 안 나가게 안전하게 보호
-        dayCell.className = `calendar-day-box ${borderStyle} p-0.5 sm:p-1.5 rounded-lg sm:rounded-xl flex flex-col justify-between text-left shadow-2xs hover:border-orange-300 transition overflow-hidden`;
+        dayCell.className = `calendar-day-box ${borderStyle} p-1 sm:p-1.5 rounded-lg sm:rounded-xl flex flex-col justify-between text-left shadow-2xs hover:border-orange-300 transition overflow-hidden`;
 
         let cellHTML = `<div class="font-extrabold text-[11px] sm:text-sm ${dateNumColor} ${isToday ? 'bg-orange-500 text-white w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[9px]' : ''}">${d}</div>`;
 
         const dayItem = eventsByDate[dateStr] || { evt18: null, evt20: null };
+        const hasEvents = dayItem.evt18 || dayItem.evt20;
+
+        if (hasEvents) {
+          dayCell.classList.add('cursor-pointer', 'hover:bg-amber-50/30');
+          dayCell.onclick = () => openModal(dateStr, dayItem);
+        }
         
-        let eventsContainerHTML = `<div class="mt-1 space-y-0.5 sm:space-y-1 w-full flex flex-col justify-end overflow-y-auto max-h-[70px] sm:max-h-[95px] pr-0.5">`;
+        let eventsContainerHTML = `<div class="mt-1 space-y-1 w-full flex flex-col justify-end overflow-hidden">`;
         
         if (dayItem.evt18) {
+          const shortTitle = getShortSummary(dayItem.evt18.title);
           eventsContainerHTML += `
-            <div class="bg-emerald-100/70 border border-emerald-300/60 p-0.5 sm:p-1 rounded text-[8.5px] sm:text-[11px] leading-tight text-emerald-950 font-bold shadow-2xs truncate">
-              ${dayItem.evt18.title}
+            <div class="bg-emerald-100/80 border border-emerald-300/70 px-1 py-0.5 rounded text-[9px] sm:text-[10px] leading-tight text-emerald-950 font-bold truncate">
+              ${shortTitle}
             </div>
           `;
         }
         
         if (dayItem.evt20) {
+          const shortTitle = getShortSummary(dayItem.evt20.title);
           eventsContainerHTML += `
-            <div class="bg-amber-100/80 border border-amber-300/70 p-0.5 sm:p-1 rounded text-[8.5px] sm:text-[11px] leading-tight text-amber-950 font-bold shadow-2xs truncate">
-              ${dayItem.evt20.title}
+            <div class="bg-amber-100/90 border border-amber-300/80 px-1 py-0.5 rounded text-[9px] sm:text-[10px] leading-tight text-amber-950 font-bold truncate">
+              ${shortTitle}
             </div>
           `;
         }
@@ -387,6 +414,15 @@
 
       container.innerHTML = '';
       container.appendChild(grid);
+    }
+
+    function getShortSummary(title) {
+      if (!title) return '';
+      // 예: "금18/0 (홍길동, 김철수 외)" 형태에서 글자가 길면 깔끔하게 요약 또는 제한
+      if (title.length > 9) {
+        return title.substring(0, 9) + '…';
+      }
+      return title;
     }
 
     function renderScheduleListView() {
@@ -458,7 +494,7 @@
               </div>
               <div class="space-y-1 min-w-0">
                 <span class="inline-block px-1.5 sm:px-2 py-0.5 ${badgeBg} rounded-md sm:rounded-lg text-[9px] sm:text-[10px] font-black shadow-xs">${timeLabel}</span>
-                <p class="font-bold text-xs sm:text-base truncate sm:whitespace-normal">${title}</p>
+                <p class="font-bold text-xs sm:text-base break-words">${title}</p>
               </div>
             </div>
           `;
@@ -469,7 +505,7 @@
       container.appendChild(listWrapper);
     }
 
-    function getGroupedEventsMap() {
+    function getGroupedEventsMapFull() {
       const eventsByDate = {};
       rawEventsList.forEach(evt => {
         const startRaw = evt.start?.dateTime || evt.start?.date;
@@ -489,6 +525,40 @@
         }
       });
       return eventsByDate;
+    }
+
+    function openModal(dateStr, dayItem) {
+      const modal = document.getElementById('eventModal');
+      const titleEl = document.getElementById('modalDateTitle');
+      const bodyEl = document.getElementById('modalContentBody');
+
+      const parts = dateStr.split('-');
+      titleEl.innerText = `${parts[0]}년 ${parseInt(parts[1])}월 ${parseInt(parts[2])}일 상세 일정`;
+
+      let html = '';
+      if (dayItem.evt18) {
+        html += `
+          <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl space-y-1">
+            <span class="inline-block px-2 py-0.5 bg-emerald-600 text-white rounded-md text-[10px] font-black">18시 일정</span>
+            <p class="font-bold text-slate-800 text-sm sm:text-base">${dayItem.evt18.title}</p>
+          </div>
+        `;
+      }
+      if (dayItem.evt20) {
+        html += `
+          <div class="p-3 bg-amber-50 border border-amber-200 rounded-2xl space-y-1">
+            <span class="inline-block px-2 py-0.5 bg-orange-500 text-white rounded-md text-[10px] font-black">20시 일정</span>
+            <p class="font-bold text-slate-800 text-sm sm:text-base">${dayItem.evt20.title}</p>
+          </div>
+        `;
+      }
+
+      bodyEl.innerHTML = html;
+      modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('eventModal').classList.add('hidden');
     }
 
     function formatYearMonthDay(date) {
