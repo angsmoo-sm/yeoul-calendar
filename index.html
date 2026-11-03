@@ -5,13 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>여울귀신 일정표</title>
   
-  <!-- PWA 웹앱 설정 (홈 화면 추가 시 구글 배지 제거 및 독립 앱 전환 지원) -->
-  <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIuOCneOCv+ODvOC5gCDsnbzsspXtk5wiLAogICJzaG9ydF9uYW1lIjogIuyInOqygOyhsCIsCiAgInN0YXJ0X3VybCI6ICIuLyIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI2Y4ZmFmYyIsCiAgInRoZW1lX2NvbG9yIjogIiNmOGZhZmMiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL2pwZWc7YmFzZTY0LC85ai80QUFRU2txSlJnQUJBUUFBQVFBQkFBRC8yd0NEQUFrR0J4TVRFaFVTQXhNV0ZSWFhHQmNhR0JnWEdCZ1hHQmRGSFhVWUhTZ2dHQm9sR3hjWElUZWhKU2tyTGk0dUZ4OHpPZE10TnlndExpcy9DcW9LRGdNLUdoQVFHaTBsSFNVdExTMHRMUzB0TFMwdExTMHRLSzA0TFMwdExTNDROQzA0TkMwdExTMHQvOWpBQUVJQU9BQTBBTUFSQWdBQ0VRQVJHZ0gveEFBY0FBRUJBUUVCQVFBQUFBQUFBQUFBQVFJREJBVUdCdzdDOHFBa3NodVUxUTVIdHNEYTZrTEF2YEE4Z0xvTDUvMEdxQlYyUzh6b2dDUURmNncvMkhXNUgwcDB2QnAwMjUyd0FzT0Rwcm1Jek9nQW1QcER6Mm95TkhnYmFHeDdhS1FEQWpneVBqSC9BQWhpNm50c3hzOHdNYVcxN2tqaHNuMTRvRWFNNTFvb0NidTNnd1NkWXh6c04zTW5nWElyUGZ6Nmp0Uk1kSGp6Q01tU2FkVkV2SHNwd0N1Yy82djljNUtzSGlwMWtrNG00bkJ4NkpBOGs1ZEFCVkh0M3gwcHJxNUt4OHptTkF2OUI1UTBiNVluWjBBR1hCSGFIdnRQOHFLVjByOTBiNHg2ZjZlY3pXOHduNkdld21sUXA1VnpUOGl3K0phMmp2a1pyU3Rwc1lCWWlhS1lCakdveUpvYk1sK1hCcE56OWk0RmxvdUp3MGFEUzh3UzdKckdBNlFkUW5zNDR1eDBjTFJ1QndJbWZ3anU0QXJ4LzhxQ2JjZmk0Ny8vQWhvMnJ1bmJIdWdpTkJnWGkycHFNaWR6Tkdnc1pzZTVnL24yb3RBNmFvY01qSFA0UUxNM1gvZEkycnFtdjhKMnV0T2dndkpPcnQ1am9oODdMNWV0cnJuL2VwLzF3MzNqUjl3OTJsd0FFT2V1SDBkTVRvbmhBQTRrZXF0UkhtSnF5Rk5JbmJ2Nmh3Zkxna21xcnYyT2VNYVVsTGlPZjNwd2t1TTU3NWJBNlJmNDlyVWpvdjE0c0VhTTVYNUR2L0FBNWdaL3dId1o3VDdiMXYzMEg1L0FOWW9QYlA0dTd0TWRlVDJXMFN0b3dpdVA5WUE5b3JCS2F3NWZlcDlmOG9BN1M0TkhNMFQ0djE1dTJmUXZmUGVjK0o2OTIwdkFpNzZMNnB3Zzh1YXZKOTU4T2hIdmdlNE1jTlpMOHdNdjlXcm0va3JTYWh5aXQzdlRIdkh1cGNjOHJpM3FwYms4bHVrNmtid3ptRzhMdjF3ZkFmZzhxK0NqYUN5d0xudEw4eTBuNWgvaE1mRnB3LzF3LzBOZ2ZtT2d3SjNmOEtoOHpzZm1yNnFzdzRjMDBqNjluU01kdzR2aU0vVjhkUjlhLzhxK0NkcTJnSjJpNldmQndyWkhnZEJ3NnhnU0dndmFHMHNzV3V2aGVWODdpMm04ZmdqUGdiNmtkTFhWb0lhdkdrYit1d3ptZ0dqaUJnbnhjWEk1dWpZMWd0U1NEcURtd2NpTXd3bUdZNGZtTWppVlZzY2pldWdqaUdvdUdlaXRyQWlXOTc3Nm55UGlhOXN4NnpsUjFNaVhndVBsclUxdVNYRXlNZ09pUTZ4dC81Y1pzaEpnbjFqUGZROVRmdUNyd0pQZDRxY3ozUURlTFkxV3liMjFsYVh6MjlyMVFwNkxicnp3dURtSWhnZUZ5dmFHeWpnWUdzeEcrUEJGTXlhRE1wdzlsQmVjT2xvbjlLdklkQ1kyUk1nTTBhS3E4Y2l1c1o1TDA4VmtwaWhNMXBnTmszSHpyZ3NqSHFvdW8ydVlndjhhZ01hZlFrdjJrc2E0NDgvc3RyZ3Z4ZmE0MWlqU0N1WlhQTVdNa1NkcHpZdVU4b2g0N1FtbzJadkVtSG1kZzZpWXRpQnAwNmpxeU5xUGtQNW5xR01oTDY5cm0wbTlmb1JtbTFkOGZkWjQwbldlNm5KclVpMmFsWjhjZnd1QjE4OHlhbXpXbGJLMnB3MnZlc2p5dnplTG16Ump6YmNkdGZqTUd1b2E2TDBPQnppTmVadmx2dnplUmNwa0R0eTJYMGY1T2g5YjB4YnhUbmkyODdNMmRvOXVzZjh1dzFtbGpsMWJ1T2Y1VmNudlZldndhOUU2dE03dWpzcjhpNzlUdkpBbnkzZjBqOXRZOUlpdjh0SHpydzlxWnhjNDRsdlluczkvNUl3UDgvaUZzWHU0ajh0SDh2OVZpMm5DUGZkOWx2ZjlpaDN4cDhxaTV0dmYxeDhwd3d1TE5QMlhDYXZmNVZnbmhCY00vZzhxcGNnOGdZSERaZTloRlpvcDhldzVwVzhicTByWjJqMmg3OHlQNWxZbDY3bVp1cDRsc2Z1MzBtcHNEVDFzcjVmWjN1MWZyeGozdnpIdlFwdmlzdzloYzgvdzJtNWRtdnF5bXZ6R09xQzNtcThqaDN3OTZ3T1QyTHpBVkd5d1c0bENqRWNwd24yeXNzMWg1RktqdzRvdWx0amFocEkyWnpQZDVzOXF5dmZtZDIzNG05Wmd3aWVzL1d5aVlaNVgxN3R1aFdybTNoZEhXN2pYNDl5Qld6NkhKOTZpTnZ1cWk2V1lqNUgxd21yVThqWXZidXZnSytrTGgvekdlaTJjd0Z1NUpTbm1jMHV2LzlXMnN6bzBrMENia3p5dlpzVjRjSGtUWElaUkpXNTVaM1ZzS3pzaHl2a1d2SnB4V25yM1A1MW1nN1psTXBGbXNYOWlRckU3MjhxOWk2dW1yUUtBdkpWdkF6ZDNjTjI0d2xNSGRvM21yMTZlUjB0UzE1NlUxcm41alpyU3Rwc1lCWWlhS1lCakdveUpvYk1sK1hCcE56OWk0RmxvdUp3MGFEUzh3UzdKckdBNlFkUW5zNDR1eDBjTFJ1QndJbWZ3anU0QXJ4LzhxQ2JjZmk0Ny8vQWhvMnJ1bmJIdWdpTkJnWGkycHFNaWR6Tkdnc1pzZTVnL24yb3RBNmFvY01qSFA0UUxNM1gvZEkycnFtdjhKMnV0T2dndkpPcnQ1am9oODdMNWV0cnJuL2VwLzF3MzNqUjl3OTJsd0FFT2V1SDBkTVRvbmhBQTRrZXF0UkhtJnF5Rk5JbmJ2Nmh3Zkxna21xcnYyT2VNYVVsTGlPZjNwd2t1TTU3NWJBNlJmNDlyVWpvdjE0c0VhTTVYNUR2L0FBNWdaL3dId1o3VDdiMXYzMEg1L0FOWW9QYlA0dTd0TWRlVDJXMFN0b3dpdVA5WUE5b3JCS2F3NWZlcDlmOG9BN1M0TkhNMFQ0djE1dTJmUXZmUGVjK0o2OTIwdkFpNzZMNnB3Zzh1YXZKOTU4T2hIdmdlNE1jTlpMOHdNdjlXcm0va3JTYWh5aXQzdlRIdkh1cGNjOHJpM3FwYms4bHVrNmtid3ptRzhMdjF3ZkFmZzhxK0NqYUN5d0xudEw4eTBuNWgvaE1mRnB3LzF3LzBOZ2ZtT2d3SjNmOEtoOHpzZm1yNnFzdzRjMDBqNxptRzhMdjF3ZkFmZzhxK0NqYUN5d0xudEw4eTBuNWgvaE1mRnB3LzF3LzBOZ2ZtT2d3SjNmOEtoOHpzZm1yNnFzdzRjMDBqNxptRzhMdjF3ZkFmZzhxK0NqYUN5d0xudEw4eTBuNWgvaE1mRnB3LzF3LzBOZ2ZtT2d3SjNmOEtoOHpzZm1yNnFzdzRjMDBqNxptRzhMdjF3ZkFmZzhxK0NqYUN5d0xudEw4eTBuNWgvaE1mRnB3LzF3LzBOZ2ZtT2d3SjNmOEtoOHpzZm1yNnFzdzRjMDBqNnBCcjE1VTN2dnhzNm5jWkp6MHRjTnh2VmhpUDA3d2Y0bnBOdlQzZUZ4ODAwcFBqOHlZWFQyWmsyOGJidUx1NjhxcXpyNDQxbDNzZ2ppOSt6cDUxb1p1TzFQOVU2UDFZNGpYaTVZNmx6dzlhSzhkRjl2K3NPbjBYZlgwMHBXdkpWdkF6ZDNjTjI0d2xNSGRvM21yMTZlUjB0UzE1NlUxcm41alpyU3Rwc1lCWWlhS1lCakdveUpvYk1sK1hCcE56OWk0RmxvdUp3MGFEUzh3UzdKckdBNlFkUW5zNDR1eDBjTFJ1QndJbWZ3anU0QXJ4LzhxQ2JjZmk0Ny8vQWhvMnJ1bmJIdWdpTkJnWGkycHFNaWR6Tkdnc1pzZTVnL24yb3RBNmFvY01qSFA0UUxNM1gvZEkycnFtdjhKMnV0T2dndkpPcnQ1am9oODdMNWV0cnJuL2VwLzF3MzNqUjl3OTJsd0FFT2V1SDBkTVRvbmhBQTRrZXF0UkhtJnF5Rk5JbmJ2Nmh3Zkxna21xcnYyT2VNYVVsTGlPZjNwd2t1TTU3NWJBNlJmNDlyVWpvdjE0c0VhTTVYNUR2L0FBNWdaL3dId1o3VDdiMXYzMEg1L0FOWW9QYlA0dTd0TWRlVDJXMFN0b3dpdVA5WUE5b3JCS2F3NWZlcDlmOG9BN1M0TkhNMFQ0djE1dTJmUXZmUGVjK0o2OTIwdkFpNzZMNnB3Zzh1YXZKOTU4T2hIdmdlNE1jTlpMOHdNdjlXcm0va3JTYWh5aXQzdlRIdkh1cGNjOHJpM3FwYms4bHVrNmtid3ptRzhMdjF3ZkFmZzhxK0NqYUN5d0xudEw4eTBuNWgvaE1mRnB3LzF3LzBOZ2ZtT2d3SjNmOEtoOHpzZm1yNnFzdzRjMDBqNnBCcjE1VTN2dnhzNm5jWkp6MHRjTnh2VmhpUDA3d2Y0bnBOdlQzZUZ4ODAwcFBqOHlZWFQyWmsyOGJidUx1NjhxcXpyNDQxbDNzZ2ppOSt6cDUxb1p1TzFQOVU2UDFZNGpYaTVZNmx6dzlhSzhkRjl2K3NPbjBYZlgwMHBtdnAxZDZ4aGg0bkJpNlpsN3B0dkkyYWxBN290dkk1V0xBN290dkk1V0xBN290dkk1V0xBN290dkk1V0xBN290dkk1V0xBN290dkk1V0xBN290dkk1V0xBN290dkk1V0xBN290dkk1V0xBN290dkk1V0xBN290dkk1V0xBN290dkk1V0xBN290dkk1V0xBN290dkk1VkxBN290dkk1V0wvd2FmMWYvWkQ9PSIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvanBlZyIsCiAgICAgICJwdXJwb3NlIjogImFueSBtYXNrYWJsZSIKICAgIH0KICBdCn0=">
-
-  <!-- GHOST OF RAPIDS 엠블럼 이미지 기반 파비콘 및 홈 화면 아이콘 설정 -->
-  <link rel="icon" href="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUSExMWFRUXGBcaGBgYGRcaGBsXGBgXGBcdFxUYHSggGBolGxcXITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGhAQGi0lHSUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLf/AABEIAOEA4QMBIgACEQEDEQH/xAAcAAABBQEBAQAAAAAAAAAAAAAFAgMEBgcAAQj/xAA/EAABAwIEAwUFBwMCBQEFBQABAgMRACEEBRIGBxMiMUEjUWEXMnGBkaEVI1JicrHB8BY0guHxQ1OSsvEk/zT/xAAZAQADAQEBAAAAAAAAAAAAAAAAAQIDBAX/xAArEQACAgEDAwMEAgMBA────────">
-  <link rel="apple-touch-icon" href="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUSExMWFRUXGBcaGBgYGRcaGBsXGBgXGBcdFxUYHSggGBolGxcXITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGhAQGi0lHSUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLf/AABEIAOEA4QMBIgACEQEDEQH/xAAcAAABBQEBAQAAAAAAAAAAAAAFAgMEBgcAAQj/xAA/EAABAwIEAwUFBwMCBQEFBQABAgMRACEEBRIGBxMiMUEjUWEXMnGBkaEVI1JicrHB8BY0guHxQ1OSsvEk/zT/xAAZAQADAQEBAAAAAAAAAAAAAAAAAQIDBAX/xAArEQACAgEDAwMEAgMBA────────">
-
+  <!-- 파비콘 및 홈 화면 아이콘 설정 -->
+  <link rel="icon" href="https://emojicdn.elk.sh/🎾">
+  <link rel="apple-touch-icon" href="https://emojicdn.elk.sh/🎾">
+  
   <!-- 카카오톡 및 SNS 공유 미리보기 설정 -->
   <meta property="og:title" content="여울귀신 일정표">
   <meta property="og:description" content="구글 캘린더 일정을 실시간 분석합니다.">
@@ -45,12 +42,12 @@
       transform: translateY(2px);
       box-shadow: 0 1px 0 0 #cbd5e1;
     }
-    /* 모바일 월간보기 높이 (확정 유지) */
+    /* 모바일 월간보기 높이 (고정 유지) */
     .calendar-day-box {
       min-height: 64px;
       height: 64px;
     }
-    /* PC(sm 이상): 20시 일정 아래 남는 여백 최소화 최적화 (112px) */
+    /* PC(sm 이상): 20시 일정 아래 남는 여백을 최소화하도록 높이 최적화 (112px) */
     @media (min-width: 640px) {
       .calendar-day-box {
         min-height: 112px;
@@ -65,8 +62,8 @@
     <!-- 상단 히어로 타이틀 헤더 -->
     <header class="bg-gradient-to-r from-amber-100 via-orange-200 to-amber-200 text-amber-950 p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl shadow-xl shadow-orange-900/5 flex items-center justify-between border border-white/60 border-b-4 border-b-orange-300">
       <div class="flex items-center gap-2.5 sm:gap-4 overflow-hidden">
-        <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/70 border border-white flex items-center justify-center shadow-inner backdrop-blur-md shrink-0 overflow-hidden">
-          <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUSExMWFRUXGBcaGBgYGRcaGBsXGBgXGBcdFxUYHSggGBolGxcXITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGhAQGi0lHSUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLf/AABEIAOEA4QMBIgACEQEDEQH/xAAcAAABBQEBAQAAAAAAAAAAAAAFAgMEBgcAAQj/xAA/EAABAwIEAwUFBwMCBQEFBQABAgMRACEEBRIGBxMiMUEjUWEXMnGBkaEVI1JicrHB8BY0guHxQ1OSsvEk/zT/xAAZAQADAQEBAAAAAAAAAAAAAAAAAQIDBAX/xAArEQACAgEDAwMEAgMBA────────" alt="GHOST OF RAPIDS" class="w-full h-full object-cover">
+        <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/70 border border-white flex items-center justify-center text-xl sm:text-3xl shadow-inner backdrop-blur-md shrink-0">
+          🎾
         </div>
         <div class="min-w-0">
           <div class="flex items-center gap-1.5 flex-wrap">
@@ -112,7 +109,7 @@
       </div>
 
       <div id="calendarDisplayContainer" class="pt-1 w-full overflow-hidden">
-        <!-- 자바스크립어로 동적 생성됨 -->
+        <!-- 자바스크립트로 동적 생성됨 -->
       </div>
     </div>
 
@@ -254,13 +251,6 @@
     let currentViewDate = new Date();
 
     window.onload = () => {
-      // 서비스 워커 등록 (PWA 구글 배지 미표시 및 독립 앱 구동 지원)
-      if ('serviceWorker' in navigator) {
-        const swBlob = new Blob([`self.addEventListener('fetch', function(e){});`], {type: 'text/javascript'});
-        const swUrl = URL.createObjectURL(swBlob);
-        navigator.serviceWorker.register(swUrl).catch(()=>{});
-      }
-
       const savedStartMonth = localStorage.getItem('gcal_start_month');
       const savedEndMonth = localStorage.getItem('gcal_end_month');
       const now = new Date();
