@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>여울귀신 일정표</title>
   
+  <!-- 원하시는 사진 URL을 아래 href에 입력하세요 -->
+  <!-- 예시: https://example.com/my-photo.png -->
+  <link rel="icon" href="https://emojicdn.elk.sh/🎾">
+  <link rel="apple-touch-icon" href="https://emojicdn.elk.sh/🎾">
+  
   <!-- 카카오톡 및 SNS 공유 미리보기 설정 -->
   <meta property="og:title" content="여울귀신 일정표">
   <meta property="og:description" content="구글 캘린더 일정을 실시간 분석합니다.">
@@ -59,7 +64,7 @@
     <header class="bg-gradient-to-r from-amber-100 via-orange-200 to-amber-200 text-amber-950 p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl shadow-xl shadow-orange-900/5 flex items-center justify-between border border-white/60 border-b-4 border-b-orange-300">
       <div class="flex items-center gap-2.5 sm:gap-4 overflow-hidden">
         <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/70 border border-white flex items-center justify-center text-xl sm:text-3xl shadow-inner backdrop-blur-md shrink-0">
-          🏸
+          🎾
         </div>
         <div class="min-w-0">
           <div class="flex items-center gap-1.5 flex-wrap">
@@ -538,6 +543,7 @@
         });
       });
 
+      container.innerHTML = '';
       container.appendChild(listWrapper);
     }
 
