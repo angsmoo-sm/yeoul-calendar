@@ -252,7 +252,12 @@
 
     window.onload = () => {
       if ('serviceWorker' in navigator) {
-        const swBlob = new Blob([`self.addEventListener('fetch', function(e){});`], {type: 'text/javascript'});
+        const swCode = `
+          self.addEventListener('install', () => self.skipWaiting());
+          self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
+          self.addEventListener('fetch', (e) => e.respondWith(fetch(e.request)));
+        `;
+        const swBlob = new Blob([swCode], {type: 'text/javascript'});
         const swUrl = URL.createObjectURL(swBlob);
         navigator.serviceWorker.register(swUrl).catch(()=>{});
       }
