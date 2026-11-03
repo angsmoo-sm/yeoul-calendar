@@ -257,22 +257,12 @@
         navigator.serviceWorker.register(swUrl).catch(()=>{});
       }
 
-      const savedStartMonth = localStorage.getItem('gcal_start_month');
-      const savedEndMonth = localStorage.getItem('gcal_end_month');
+      // 항상 현재 월 기준 최근 3개월(9월~11월)로 기본값 자동 설정
       const now = new Date();
+      const threeMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 2, 1);
       
-      if (savedEndMonth) {
-        document.getElementById('endMonthInput').value = savedEndMonth;
-      } else {
-        document.getElementById('endMonthInput').value = formatYearMonth(now);
-      }
-
-      if (savedStartMonth) {
-        document.getElementById('startMonthInput').value = savedStartMonth;
-      } else {
-        const threeMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 2, 1);
-        document.getElementById('startMonthInput').value = formatYearMonth(threeMonthsAgo);
-      }
+      document.getElementById('endMonthInput').value = formatYearMonth(now);
+      document.getElementById('startMonthInput').value = formatYearMonth(threeMonthsAgo);
 
       loadCalendarMonthData();
       loadStatsData();
@@ -311,9 +301,6 @@
     async function loadStatsData() {
       const startMonth = document.getElementById('startMonthInput').value;
       const endMonth = document.getElementById('endMonthInput').value;
-
-      localStorage.setItem('gcal_start_month', startMonth);
-      localStorage.setItem('gcal_end_month', endMonth);
 
       let timeMinParam = '';
       let timeMaxParam = '';
@@ -667,10 +654,8 @@
             if (!attendeeData[name]) {
               attendeeData[name] = { count: 0, lastDate: '-', lastTimestamp: 0 };
             }
-            // 참석 횟수(누적 카운트)는 미래 일정을 포함해 모두 정상 반영
             attendeeData[name].count += 1;
             
-            // 최근 참석일 표시 날짜만 '오늘(현재) 이하'의 일정 중에서 가장 최근 날짜로 갱신
             if (eventDateObj.getTime() <= nowTimestamp && eventDateObj.getTime() >= attendeeData[name].lastTimestamp) {
               attendeeData[name].lastDate = formattedDate;
               attendeeData[name].lastTimestamp = eventDateObj.getTime();
