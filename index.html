@@ -180,7 +180,7 @@
     </div>
   </div>
 
-  <!-- 모달 (일정 박스와 확인 버튼 사이 간격 2배 확대 적용) -->
+  <!-- 모달 -->
   <div id="eventModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl p-4 sm:p-5 max-w-sm w-full shadow-2xl border border-slate-100 space-y-2">
       <div class="border-b border-slate-100 pb-1.5">
@@ -501,7 +501,26 @@
           labels: top10.map(i => i[0]),
           datasets: [{ label: '참석 횟수', data: top10.map(i => i[1].count), backgroundColor: gTop, borderRadius: 6, barPercentage: 0.55, categoryPercentage: 0.65 }]
         },
-        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { color: '#e2e8f0' } }, y: { grid: { display: false } } } }
+        options: { 
+          indexAxis: 'y', 
+          responsive: true, 
+          maintainAspectRatio: false, 
+          plugins: { legend: { display: false } }, 
+          scales: { 
+            x: { grid: { color: '#e2e8f0' } }, 
+            y: { 
+              grid: { display: false },
+              ticks: {
+                autoSkip: false, // 👇 라벨을 건너뛰지 않고 10개 전부 표시
+                font: {
+                  family: 'Pretendard',
+                  weight: 'bold',
+                  size: 10 // 모바일에서 10개가 다 들어가도록 폰트 크기 최적화
+                }
+              }
+            } 
+          } 
+        }
       });
     }
   </script>
