@@ -83,7 +83,7 @@
             <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm shrink-0"></span>
             <h2 id="calendarTitle" class="text-sm sm:text-xl font-black text-slate-800 truncate">모임 일정표</h2>
           </div>
-          <p class="text-[11px] text-slate-500 font-medium pl-4.5">💡 버튼을 눌러 달력과 목록으로 전환해 보세요!</p>
+          <p class="text-[11px] text-slate-500 font-medium pl-4.5">💡 날짜를 터치하여 참석자를 확인해 보세요!</p>
         </div>
         
         <div class="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
@@ -428,14 +428,14 @@
           const titleText = dayItem.evt18.title;
           const mobileShortText = getMobileSummary(titleText);
           eventsContainerHTML += `
-            <div class="bg-emerald-100/80 border border-emerald-300/70 px-0.5 py-0.5 rounded text-[10px] sm:text-xs leading-tight text-emerald-950 font-bold sm:line-clamp-2 sm:overflow-hidden sm:text-ellipsis sm:h-[2.3rem]">
+            <div class="bg-emerald-100/80 border border-emerald-300/70 px-0.7 py-0.5 rounded text-[10px] sm:text-xs leading-tight text-emerald-950 font-bold sm:line-clamp-2 sm:overflow-hidden sm:text-ellipsis sm:h-[2.3rem]">
               <span class="sm:hidden block truncate">${mobileShortText}</span>
               <span class="hidden sm:block">${titleText}</span>
             </div>
           `;
         } else {
           eventsContainerHTML += `
-            <div class="opacity-0 border border-transparent px-0.5 py-0.5 rounded text-[10px] sm:text-xs leading-tight pointer-events-none select-none sm:h-[2.3rem]">
+            <div class="opacity-0 border border-transparent px-0.7 py-0.5 rounded text-[10px] sm:text-xs leading-tight pointer-events-none select-none sm:h-[2.3rem]">
               <span class="sm:hidden block truncate">&nbsp;</span>
               <span class="hidden sm:block">&nbsp;</span>
             </div>
@@ -446,7 +446,7 @@
           const titleText = dayItem.evt20.title;
           const mobileShortText = getMobileSummary(titleText);
           eventsContainerHTML += `
-            <div class="bg-amber-100/90 border border-amber-300/80 px-0.5 py-0.5 rounded text-[10px] sm:text-xs leading-tight text-amber-950 font-bold sm:line-clamp-2 sm:overflow-hidden sm:text-ellipsis sm:h-[2.3rem]">
+            <div class="bg-amber-100/90 border border-amber-300/80 px-0.7 py-0.5 rounded text-[10px] sm:text-xs leading-tight text-amber-950 font-bold sm:line-clamp-2 sm:overflow-hidden sm:text-ellipsis sm:h-[2.3rem]">
               <span class="sm:hidden block truncate">${mobileShortText}</span>
               <span class="hidden sm:block">${titleText}</span>
             </div>
