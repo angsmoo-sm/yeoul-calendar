@@ -5,11 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>여울귀신 일정표</title>
   
-  <!-- 파비콘 및 홈 화면 아이콘 설정 (테니스공 이모지) -->
   <link rel="icon" href="https://emojicdn.elk.sh/🎾">
   <link rel="apple-touch-icon" href="https://emojicdn.elk.sh/🎾">
   
-  <!-- 카카오톡 및 SNS 공유 미리보기 설정 -->
   <meta property="og:title" content="여울귀신 일정표">
   <meta property="og:description" content="구글 캘린더 일정을 실시간 분석합니다.">
 
@@ -28,31 +26,13 @@
       border: 1px solid rgba(226, 232, 240, 0.8);
       border-bottom: 3px solid #cbd5e1;
     }
-    .btn-3d-primary {
-      box-shadow: 0 4px 0 0 #c2410c;
-    }
-    .btn-3d-primary:active {
-      transform: translateY(2px);
-      box-shadow: 0 2px 0 0 #c2410c;
-    }
-    .btn-3d-light {
-      box-shadow: 0 3px 0 0 #cbd5e1;
-    }
-    .btn-3d-light:active {
-      transform: translateY(2px);
-      box-shadow: 0 1px 0 0 #cbd5e1;
-    }
-    /* 모바일 월간보기 높이 */
-    .calendar-day-box {
-      min-height: 64px;
-      height: 64px;
-    }
-    /* PC(sm 이상): 20시 일정 아래 남는 여백 최소화 최적화 (112px) */
+    .btn-3d-primary { box-shadow: 0 4px 0 0 #c2410c; }
+    .btn-3d-primary:active { transform: translateY(2px); box-shadow: 0 2px 0 0 #c2410c; }
+    .btn-3d-light { box-shadow: 0 3px 0 0 #cbd5e1; }
+    .btn-3d-light:active { transform: translateY(2px); box-shadow: 0 1px 0 0 #cbd5e1; }
+    .calendar-day-box { min-height: 64px; height: 64px; }
     @media (min-width: 640px) {
-      .calendar-day-box {
-        min-height: 112px;
-        height: 112px;
-      }
+      .calendar-day-box { min-height: 112px; height: 112px; }
     }
   </style>
 </head>
@@ -75,7 +55,7 @@
       </div>
     </header>
 
-    <!-- 1. 최상단: 월별 모임 일정표 (월간보기 ⇄ 일정보기 전환) -->
+    <!-- 1. 월별 모임 일정표 -->
     <div class="card-3d p-2 sm:p-7 rounded-2xl sm:rounded-3xl space-y-3 sm:space-y-4">
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-slate-200 pb-3 sm:pb-4 gap-2.5 px-1 sm:px-0">
         <div class="space-y-0.5">
@@ -83,63 +63,48 @@
             <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm shrink-0"></span>
             <h2 id="calendarTitle" class="text-sm sm:text-xl font-black text-slate-800 truncate">모임 일정표</h2>
           </div>
-          <p class="text-[11px] text-slate-500 font-medium pl-4.5">💡 날짜를 터치하여 참석자를 확인해 보세요!</p>
+          <p id="guideText" class="text-[11px] text-slate-500 font-medium pl-4.5 sm:hidden">💡 날짜를 터치하여 참석자를 확인해 보세요!</p>
         </div>
         
         <div class="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
-          <!-- 보기 전환 버튼 -->
           <div class="inline-flex bg-slate-200/80 p-1 rounded-xl border border-slate-300 shadow-inner shrink-0">
-            <button onclick="setViewMode('calendar')" id="btnModeCalendar" class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-white text-orange-600 shadow-sm flex items-center gap-1">
-              <span>📅 월간보기</span>
-            </button>
-            <button onclick="setViewMode('list')" id="btnModeList" class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 hover:text-slate-900 flex items-center gap-1">
-              <span>📋 일정보기</span>
-            </button>
+            <button onclick="setViewMode('calendar')" id="btnModeCalendar" class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-white text-orange-600 shadow-sm flex items-center gap-1">📅 월간보기</button>
+            <button onclick="setViewMode('list')" id="btnModeList" class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 hover:text-slate-900 flex items-center gap-1">📋 일정보기</button>
           </div>
 
           <div class="flex items-center gap-1 shrink-0">
-            <button onclick="changeMonth(-1)" class="w-8 h-8 sm:w-10 sm:h-10 bg-white hover:bg-amber-50 text-slate-700 font-extrabold rounded-xl flex items-center justify-center btn-3d-light border border-slate-200 transition text-xs sm:text-sm">
-              ◀
-            </button>
-            <button onclick="changeMonth(1)" class="w-8 h-8 sm:w-10 sm:h-10 bg-white hover:bg-amber-50 text-slate-700 font-extrabold rounded-xl flex items-center justify-center btn-3d-light border border-slate-200 transition text-xs sm:text-sm">
-              ▶
-            </button>
+            <button onclick="changeMonth(-1)" class="w-8 h-8 sm:w-10 sm:h-10 bg-white hover:bg-amber-50 text-slate-700 font-extrabold rounded-xl flex items-center justify-center btn-3d-light border border-slate-200 transition text-xs sm:text-sm">◀</button>
+            <button onclick="changeMonth(1)" class="w-8 h-8 sm:w-10 sm:h-10 bg-white hover:bg-amber-50 text-slate-700 font-extrabold rounded-xl flex items-center justify-center btn-3d-light border border-slate-200 transition text-xs sm:text-sm">▶</button>
           </div>
         </div>
       </div>
 
-      <div id="calendarDisplayContainer" class="pt-1 w-full overflow-hidden">
-        <!-- 자바스크립트로 동적 생성됨 -->
-      </div>
+      <div id="calendarDisplayContainer" class="pt-1 w-full overflow-hidden"></div>
     </div>
 
-    <!-- 2. 중간: 통계 조회 기간 설정바 -->
+    <!-- 2. 통계 조회 기간 설정바 -->
     <div class="card-3d p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl space-y-2.5 sm:space-y-3 bg-gradient-to-r from-slate-50 to-amber-50/30">
       <div class="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-800">
         <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm shrink-0"></span> 참석현황 통계 조회 기간 설정
       </div>
-      
       <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
         <div class="flex items-center gap-1.5 flex-1 min-w-0">
           <input type="month" id="startMonthInput" class="w-full min-w-0 px-2.5 sm:px-3 py-2 sm:py-2.5 bg-white border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-800 font-bold outline-none focus:ring-2 focus:ring-orange-400 transition shadow-inner">
           <span class="text-slate-600 font-bold shrink-0">~</span>
           <input type="month" id="endMonthInput" class="w-full min-w-0 px-2.5 sm:px-3 py-2 sm:py-2.5 bg-white border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-800 font-bold outline-none focus:ring-2 focus:ring-orange-400 transition shadow-inner">
         </div>
-        
-        <button onclick="loadStatsData()" class="w-full sm:w-auto px-5 py-2 sm:py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-black rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5 btn-3d-primary transition shadow-sm shrink-0">
-          <span>조회하기</span>
-        </button>
+        <button onclick="loadStatsData()" class="w-full sm:w-auto px-5 py-2 sm:py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-black rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5 btn-3d-primary transition shadow-sm shrink-0">조회하기</button>
       </div>
     </div>
 
-    <!-- 3. 마지막: 참석현황 (지표 카드, 차트, 상세 목록) -->
+    <!-- 3. 참석현황 -->
     <div class="space-y-4 sm:space-y-7 pt-1">
       <div class="flex items-center gap-2">
         <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm shrink-0"></span>
         <h2 class="text-sm sm:text-xl font-black text-slate-800 truncate">참석현황 통계</h2>
       </div>
 
-      <!-- 핵심 지표 카드 -->
+      <!-- 지표 카드 -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5">
         <div class="card-3d p-4 sm:p-6 rounded-2xl sm:rounded-3xl hover:-translate-y-1 transition-all duration-200 flex items-center justify-between group border-l-4 border-l-orange-500">
           <div>
@@ -166,7 +131,7 @@
         </div>
       </div>
 
-      <!-- 시각화 차트 그리드 -->
+      <!-- 차트 -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-3.5 sm:gap-5">
         <div class="card-3d p-4 sm:p-6 rounded-2xl sm:rounded-3xl">
           <div class="flex items-center justify-between mb-3">
@@ -175,9 +140,7 @@
             </h3>
             <span class="text-[10px] sm:text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-md border border-orange-200 shadow-sm shrink-0">18시/20시</span>
           </div>
-          <div class="relative h-[200px] sm:h-[260px]">
-            <canvas id="monthlyChart"></canvas>
-          </div>
+          <div class="relative h-[200px] sm:h-[260px]"><canvas id="monthlyChart"></canvas></div>
         </div>
 
         <div class="card-3d p-4 sm:p-6 rounded-2xl sm:rounded-3xl">
@@ -187,18 +150,14 @@
             </h3>
             <span class="text-[10px] sm:text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 shadow-sm shrink-0">상위 순위</span>
           </div>
-          <div class="relative h-[200px] sm:h-[260px]">
-            <canvas id="attendeeChart"></canvas>
-          </div>
+          <div class="relative h-[200px] sm:h-[260px]"><canvas id="attendeeChart"></canvas></div>
         </div>
       </div>
 
-      <!-- 회원 참석자별 상세 목록 테이블 -->
+      <!-- 테이블 -->
       <div class="card-3d rounded-2xl sm:rounded-3xl overflow-hidden">
         <div class="p-4 sm:p-6 border-b border-slate-200 flex items-center justify-between bg-slate-50/80">
-          <h3 class="text-xs sm:text-base font-extrabold text-slate-800 flex items-center gap-1.5 truncate">
-            <span>👤 인원별 참석 현황</span>
-          </h3>
+          <h3 class="text-xs sm:text-base font-extrabold text-slate-800"><span>👤 인원별 참석 현황</span></h3>
           <span class="text-[10px] sm:text-xs font-bold text-slate-400 shrink-0">실시간 파싱</span>
         </div>
         <div class="overflow-x-auto">
@@ -212,27 +171,22 @@
               </tr>
             </thead>
             <tbody id="attendeeTableBody" class="divide-y divide-slate-100">
-              <tr>
-                <td colspan="4" class="p-6 sm:p-10 text-center text-slate-400 font-medium">데이터를 불러오는 중입니다...</td>
-              </tr>
+              <tr><td colspan="4" class="p-6 sm:p-10 text-center text-slate-400 font-medium">데이터를 불러오는 중입니다...</td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
-
   </div>
 
-  <!-- 일정 상세 팝업 (모달) -->
+  <!-- 모달 -->
   <div id="eventModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-3xl p-5 sm:p-6 max-w-sm w-full shadow-2xl border border-slate-100 space-y-4 animate-in fade-in zoom-in duration-150">
+    <div class="bg-white rounded-3xl p-5 sm:p-6 max-w-sm w-full shadow-2xl border border-slate-100 space-y-4">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
         <h3 id="modalDateTitle" class="text-base sm:text-lg font-black text-slate-800">일정 상세 내용</h3>
         <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold flex items-center justify-center transition">✕</button>
       </div>
-      <div id="modalContentBody" class="space-y-3 max-h-[60vh] overflow-y-auto pr-1">
-        <!-- 동적 삽입 -->
-      </div>
+      <div id="modalContentBody" class="space-y-3 max-h-[60vh] overflow-y-auto pr-1"></div>
       <button onclick="closeModal()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs sm:text-sm transition shadow-sm">확인</button>
     </div>
   </div>
@@ -241,222 +195,128 @@
     const API_KEY = "AIzaSyDKHKIJGfPXfyN7G7puTs8XrBZKPiBSCP0";
     const CALENDAR_ID = "aefd539b231a85ce02afd23de338fda979c6ac1b2be3ec62ee91fb6aebfdb022@group.calendar.google.com";
 
-    let monthlyChartInstance = null;
-    let attendeeChartInstance = null;
-    
-    let calendarEventsList = [];
-    let statsEventsList = [];
-
-    let currentViewMode = 'calendar';
-    let currentViewDate = new Date();
+    let monthlyChartInstance = null, attendeeChartInstance = null;
+    let calendarEventsList = [], statsEventsList = [];
+    let currentViewMode = 'calendar', currentViewDate = new Date();
 
     window.onload = () => {
-      if ('serviceWorker' in navigator) {
-        const swCode = `
-          self.addEventListener('install', () => self.skipWaiting());
-          self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
-          self.addEventListener('fetch', (e) => e.respondWith(fetch(e.request)));
-        `;
-        const swBlob = new Blob([swCode], {type: 'text/javascript'});
-        const swUrl = URL.createObjectURL(swBlob);
-        navigator.serviceWorker.register(swUrl).catch(()=>{});
-      }
-
-      // 항상 현재 월 기준 최근 3개월(9월~11월)로 기본값 자동 설정
       const now = new Date();
-      const threeMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 2, 1);
-      
-      document.getElementById('endMonthInput').value = formatYearMonth(now);
-      document.getElementById('startMonthInput').value = formatYearMonth(threeMonthsAgo);
-
+      document.getElementById('endMonthInput').value = fmtYM(now);
+      document.getElementById('startMonthInput').value = fmtYM(new Date(now.getFullYear(), now.getMonth() - 2, 1));
       loadCalendarMonthData();
       loadStatsData();
     };
 
-    function formatYearMonth(date) {
-      const y = date.getFullYear();
-      const m = String(date.getMonth() + 1).padStart(2, '0');
-      return `${y}-${m}`;
+    function fmtYM(date) {
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+    }
+
+    async function fetchEvents(start, end) {
+      const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&maxResults=2500&singleEvents=true&orderBy=startTime&timeMin=${start.toISOString()}&timeMax=${end.toISOString()}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('데이터를 불러오지 못했습니다.');
+      return (await res.json()).items || [];
     }
 
     async function loadCalendarMonthData() {
-      const year = currentViewDate.getFullYear();
-      const month = currentViewDate.getMonth() + 1;
-
-      const startDate = new Date(year, month - 1, 1, 0, 0, 0);
-      const endDate = new Date(year, month, 1, 0, 0, 0);
-
-      const timeMinParam = `&timeMin=${startDate.toISOString()}`;
-      const timeMaxParam = `&timeMax=${endDate.toISOString()}`;
-
-      const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&maxResults=2500&singleEvents=true&orderBy=startTime${timeMinParam}${timeMaxParam}`;
-
-      try {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error('일정 데이터를 불러오지 못했습니다.');
-        
-        const data = await res.json();
-        calendarEventsList = data.items || [];
-        renderCalendarSection();
-      } catch (err) {
-        console.error(err);
-      }
+      const y = currentViewDate.getFullYear(), m = currentViewDate.getMonth() + 1;
+      calendarEventsList = await fetchEvents(new Date(y, m - 1, 1), new Date(y, m, 1)).catch(() => []);
+      renderCalendarSection();
     }
 
     async function loadStatsData() {
-      const startMonth = document.getElementById('startMonthInput').value;
-      const endMonth = document.getElementById('endMonthInput').value;
-
-      let timeMinParam = '';
-      let timeMaxParam = '';
-
-      if (startMonth) {
-        const startDate = new Date(`${startMonth}-01T00:00:00Z`);
-        timeMinParam = `&timeMin=${startDate.toISOString()}`;
-      }
-
-      if (endMonth) {
-        const parts = endMonth.split('-');
-        const year = parseInt(parts[0], 10);
-        const month = parseInt(parts[1], 10);
-        const endDate = new Date(year, month, 1, 0, 0, 0);
-        timeMaxParam = `&timeMax=${endDate.toISOString()}`;
-      }
-
-      const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&maxResults=2500&singleEvents=true&orderBy=startTime${timeMinParam}${timeMaxParam}`;
-
+      const start = document.getElementById('startMonthInput').value;
+      const end = document.getElementById('endMonthInput').value;
+      const tMin = start ? new Date(`${start}-01T00:00:00Z`).toISOString() : '';
+      const tMax = end ? (() => { const [y, m] = end.split('-'); return new Date(y, m, 1).toISOString(); })() : '';
+      
+      const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&maxResults=2500&singleEvents=true&orderBy=startTime${tMin ? '&timeMin='+tMin : ''}${tMax ? '&timeMax='+tMax : ''}`;
       try {
         const res = await fetch(url);
         if (!res.ok) throw new Error('통계 데이터를 불러오지 못했습니다.');
-        
-        const data = await res.json();
-        statsEventsList = data.items || [];
-        
+        statsEventsList = (await res.json()).items || [];
         processCalendarData(statsEventsList);
-      } catch (err) {
-        alert(err.message);
-      }
+      } catch (err) { alert(err.message); }
     }
 
     function setViewMode(mode) {
       currentViewMode = mode;
-      
-      const btnCal = document.getElementById('btnModeCalendar');
-      const btnList = document.getElementById('btnModeList');
-
-      if (mode === 'calendar') {
-        btnCal.className = "px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-white text-orange-600 shadow-sm flex items-center gap-1";
-        btnList.className = "px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 hover:text-slate-900 flex items-center gap-1";
-      } else {
-        btnList.className = "px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-white text-orange-600 shadow-sm flex items-center gap-1";
-        btnCal.className = "px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 hover:text-slate-900 flex items-center gap-1";
-      }
-
+      document.getElementById('btnModeCalendar').className = mode === 'calendar' ? "px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-white text-orange-600 shadow-sm flex items-center gap-1" : "px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 hover:text-slate-900 flex items-center gap-1";
+      document.getElementById('btnModeList').className = mode === 'list' ? "px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-white text-orange-600 shadow-sm flex items-center gap-1" : "px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 hover:text-slate-900 flex items-center gap-1";
+      document.getElementById('guideText').style.display = mode === 'calendar' ? 'block' : 'none';
       renderCalendarSection();
     }
 
-    function changeMonth(direction) {
-      currentViewDate.setMonth(currentViewDate.getMonth() + direction);
+    function changeMonth(dir) {
+      currentViewDate.setMonth(currentViewDate.getMonth() + dir);
       loadCalendarMonthData();
     }
 
     function renderCalendarSection() {
-      if (currentViewMode === 'calendar') {
-        renderMonthCalendarView();
-      } else {
-        renderScheduleListView();
-      }
+      if (currentViewMode === 'calendar') renderMonthCalendarView();
+      else renderScheduleListView();
     }
 
     function renderMonthCalendarView() {
-      const year = currentViewDate.getFullYear();
-      const month = currentViewDate.getMonth() + 1;
-      document.getElementById('calendarTitle').innerText = `${year}년 ${month}월 모임 일정표`;
+      const y = currentViewDate.getFullYear(), m = currentViewDate.getMonth() + 1;
+      document.getElementById('calendarTitle').innerText = `${y}년 ${m}월 모임 일정표`;
 
       const container = document.getElementById('calendarDisplayContainer');
       const grid = document.createElement('div');
       grid.className = 'grid grid-cols-7 gap-0.5 sm:gap-2 text-center w-full';
 
-      const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
-      weekDays.forEach((day, idx) => {
-        const header = document.createElement('div');
-        let textColor = 'text-slate-600';
-        if (idx === 0) textColor = 'text-rose-500';
-        if (idx === 6) textColor = 'text-sky-600';
-        header.className = `font-black text-[11px] sm:text-sm py-1 sm:py-1.5 ${textColor}`;
-        header.innerText = day;
-        grid.appendChild(header);
+      ['일', '월', '화', '수', '목', '금', '토'].forEach((day, idx) => {
+        const h = document.createElement('div');
+        h.className = `font-black text-[11px] sm:text-sm py-1 sm:py-1.5 ${idx === 0 ? 'text-rose-500' : idx === 6 ? 'text-sky-600' : 'text-slate-600'}`;
+        h.innerText = day;
+        grid.appendChild(h);
       });
 
       const eventsByDate = getGroupedEventsMapFull();
-      const firstDay = new Date(year, month - 1, 1).getDay();
-      const lastDate = new Date(year, month, 0).getDate();
-      const todayStr = formatYearMonthDay(new Date());
+      const firstDay = new Date(y, m - 1, 1).getDay();
+      const lastDate = new Date(y, m, 0).getDate();
+      const todayStr = new Date().toISOString().substring(0, 10);
 
       for (let i = 0; i < firstDay; i++) {
-        const emptyCell = document.createElement('div');
-        emptyCell.className = 'calendar-day-box bg-slate-50/50 rounded-md sm:rounded-xl border border-slate-100 opacity-40';
-        grid.appendChild(emptyCell);
+        const empty = document.createElement('div');
+        empty.className = 'calendar-day-box bg-slate-50/50 rounded-md sm:rounded-xl border border-slate-100 opacity-40';
+        grid.appendChild(empty);
       }
 
       for (let d = 1; d <= lastDate; d++) {
-        const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const dateStr = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
         const dayCell = document.createElement('div');
-        
         const isToday = dateStr === todayStr;
-        const dayOfWeek = new Date(year, month - 1, d).getDay();
-        let dateNumColor = 'text-slate-700';
-        if (dayOfWeek === 0) dateNumColor = 'text-rose-500';
-        if (dayOfWeek === 6) dateNumColor = 'text-sky-600';
+        const dayOfWeek = new Date(y, m - 1, d).getDay();
+        const numColor = dayOfWeek === 0 ? 'text-rose-500' : dayOfWeek === 6 ? 'text-sky-600' : 'text-slate-700';
 
-        let borderStyle = isToday ? 'border-2 border-orange-500 bg-orange-50/30' : 'border border-slate-200 bg-white';
-        dayCell.className = `calendar-day-box ${borderStyle} p-0.5 sm:p-1 rounded-md sm:rounded-xl flex flex-col justify-start text-left shadow-2xs hover:border-orange-300 transition overflow-hidden space-y-0.5 sm:space-y-1`;
+        dayCell.className = `calendar-day-box ${isToday ? 'border-2 border-orange-500 bg-orange-50/30' : 'border border-slate-200 bg-white'} p-0.5 sm:p-1 rounded-md sm:rounded-xl flex flex-col justify-start text-left shadow-2xs hover:border-orange-300 transition overflow-hidden space-y-0.5 sm:space-y-1`;
 
-        let cellHTML = `<div class="font-extrabold text-[10px] sm:text-sm ${dateNumColor} ${isToday ? 'bg-orange-500 text-white w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[9px]' : ''}">${d}</div>`;
-
+        let cellHTML = `<div class="font-extrabold text-[10px] sm:text-sm ${numColor} ${isToday ? 'bg-orange-500 text-white w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[9px]' : ''}">${d}</div>`;
         const dayItem = eventsByDate[dateStr] || { evt18: null, evt20: null };
-        const hasEvents = dayItem.evt18 || dayItem.evt20;
 
-        if (hasEvents) {
+        if (dayItem.evt18 || dayItem.evt20) {
           dayCell.classList.add('cursor-pointer', 'hover:bg-amber-50/30');
           dayCell.onclick = () => openModal(dateStr, dayItem);
         }
-        
-        let eventsContainerHTML = `<div class="space-y-0.5 sm:space-y-1 w-full flex flex-col overflow-hidden">`;
-        
-        if (dayItem.evt18) {
-          const titleText = dayItem.evt18.title;
-          const mobileShortText = getMobileSummary(titleText);
-          eventsContainerHTML += `
-            <div class="bg-emerald-100/80 border border-emerald-300/70 px-0.5 py-0.5 rounded text-[10px] sm:text-xs leading-tight text-emerald-950 font-bold sm:line-clamp-2 sm:overflow-hidden sm:text-ellipsis sm:h-[2.3rem]">
-              <span class="sm:hidden block truncate">${mobileShortText}</span>
-              <span class="hidden sm:block">${titleText}</span>
-            </div>
-          `;
-        } else {
-          eventsContainerHTML += `
-            <div class="opacity-0 border border-transparent px-0.5 py-0.5 rounded text-[10px] sm:text-xs leading-tight pointer-events-none select-none sm:h-[2.3rem]">
-              <span class="sm:hidden block truncate">&nbsp;</span>
-              <span class="hidden sm:block">&nbsp;</span>
-            </div>
-          `;
-        }
-        
-        if (dayItem.evt20) {
-          const titleText = dayItem.evt20.title;
-          const mobileShortText = getMobileSummary(titleText);
-          eventsContainerHTML += `
-            <div class="bg-amber-100/90 border border-amber-300/80 px-0.5 py-0.5 rounded text-[10px] sm:text-xs leading-tight text-amber-950 font-bold sm:line-clamp-2 sm:overflow-hidden sm:text-ellipsis sm:h-[2.3rem]">
-              <span class="sm:hidden block truncate">${mobileShortText}</span>
-              <span class="hidden sm:block">${titleText}</span>
-            </div>
-          `;
-        }
-        
-        eventsContainerHTML += `</div>`;
-        cellHTML += eventsContainerHTML;
 
-        dayCell.innerHTML = cellHTML;
+        let eventsHTML = `<div class="space-y-0.5 sm:space-y-1 w-full flex flex-col overflow-hidden">`;
+        ['evt18', 'evt20'].forEach(key => {
+          const evt = dayItem[key];
+          if (evt) {
+            const shortTxt = evt.title.split(/[\s\n]+/)[0];
+            const bgClass = key === 'evt18' ? 'bg-emerald-100/80 border-emerald-300/70 text-emerald-950' : 'bg-amber-100/90 border-amber-300/80 text-amber-950';
+            eventsHTML += `<div class="${bgClass} border px-0.5 py-0.5 rounded text-[10px] sm:text-xs leading-tight font-bold sm:line-clamp-2 sm:overflow-hidden sm:text-ellipsis sm:h-[2.3rem]">
+              <span class="sm:hidden block text-center truncate" style="font-variant-numeric: tabular-nums;">${shortTxt}</span>
+              <span class="hidden sm:block text-left">${evt.title}</span>
+            </div>`;
+          } else {
+            eventsHTML += `<div class="opacity-0 border border-transparent px-0.5 py-0.5 rounded text-[10px] sm:text-xs leading-tight pointer-events-none select-none sm:h-[2.3rem]"><span class="sm:hidden block truncate">&nbsp;</span><span class="hidden sm:block">&nbsp;</span></div>`;
+          }
+        });
+        eventsHTML += `</div>`;
+        
+        dayCell.innerHTML = cellHTML + eventsHTML;
         grid.appendChild(dayCell);
       }
 
@@ -464,318 +324,177 @@
       container.appendChild(grid);
     }
 
-    function getMobileSummary(title) {
-      if (!title) return '';
-      const firstPart = title.split(/[\s\n]+/)[0];
-      return firstPart;
-    }
-
     function renderScheduleListView() {
-      const year = currentViewDate.getFullYear();
-      const month = currentViewDate.getMonth() + 1;
-      document.getElementById('calendarTitle').innerText = `${year}년 ${month}월 모임 일정표`;
+      const y = currentViewDate.getFullYear(), m = currentViewDate.getMonth() + 1;
+      document.getElementById('calendarTitle').innerText = `${y}년 ${m}월 모임 일정표`;
 
       const container = document.getElementById('calendarDisplayContainer');
       container.innerHTML = '';
 
-      const targetMonthStr = `${year}-${String(month).padStart(2, '0')}`;
-      const filteredEvents = calendarEventsList.filter(evt => {
-        const startRaw = evt.start?.dateTime || evt.start?.date;
-        return startRaw && startRaw.startsWith(targetMonthStr);
-      });
+      const targetStr = `${y}-${String(m).padStart(2, '0')}`;
+      const filtered = calendarEventsList.filter(e => (e.start?.dateTime || e.start?.date)?.startsWith(targetStr));
 
-      if (filteredEvents.length === 0) {
+      if (filtered.length === 0) {
         container.innerHTML = `<div class="text-center py-10 text-slate-400 font-medium text-xs sm:text-sm">해당 월에 등록된 일정이 없습니다.</div>`;
         return;
       }
 
       const listWrapper = document.createElement('div');
       listWrapper.className = 'space-y-1.5 sm:space-y-2 max-h-[420px] overflow-y-auto pr-1';
-
       const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
+      const grouped = {};
 
-      const groupedByDate = {};
-      filteredEvents.forEach(evt => {
-        const startRaw = evt.start?.dateTime || evt.start?.date;
-        if (!startRaw) return;
-        const dateKey = startRaw.substring(0, 10);
-        if (!groupedByDate[dateKey]) {
-          groupedByDate[dateKey] = [];
-        }
-        groupedByDate[dateKey].push(evt);
+      filtered.forEach(e => {
+        const dKey = (e.start?.dateTime || e.start?.date).substring(0, 10);
+        if (!grouped[dKey]) grouped[dKey] = [];
+        grouped[dKey].push(e);
       });
 
-      Object.keys(groupedByDate).sort().forEach(dateKey => {
-        const dayEvents = groupedByDate[dateKey];
-        const dateObj = new Date(dateKey);
-        const dayNum = dateObj.getDate();
-        const dayOfWeek = weekDays[dateObj.getDay()];
+      Object.keys(grouped).sort().forEach(dKey => {
+        const dateObj = new Date(dKey);
+        grouped[dKey].sort((a, b) => new Date(a.start?.dateTime || a.start?.date).getHours() - new Date(b.start?.dateTime || b.start?.date).getHours());
 
-        dayEvents.sort((a, b) => {
-          const tA = new Date(a.start?.dateTime || a.start?.date).getHours();
-          const tB = new Date(b.start?.dateTime || b.start?.date).getHours();
-          return tA - tB;
-        });
-
-        dayEvents.forEach(evt => {
-          const startRaw = evt.start?.dateTime || evt.start?.date;
-          const hour = new Date(startRaw).getHours();
-          const timeLabel = hour >= 19 ? '20시' : '18시';
-          
-          const bgStyle = timeLabel === '20시' 
-            ? 'bg-amber-100/80 border-amber-300/70 text-amber-950' 
-            : 'bg-emerald-100/70 border-emerald-300/60 text-emerald-950';
-          
-          const badgeBg = timeLabel === '20시' ? 'bg-orange-500 text-white' : 'bg-emerald-600 text-white';
-          const title = evt.summary || '일정';
-
+        grouped[dKey].forEach(evt => {
+          const hour = new Date(evt.start?.dateTime || evt.start?.date).getHours();
+          const is20 = hour >= 19;
           const item = document.createElement('div');
-          item.className = `p-2 sm:p-3 ${bgStyle} border rounded-xl sm:rounded-2xl flex items-center justify-between gap-2.5 shadow-2xs transition`;
+          item.className = `p-2 sm:p-3 ${is20 ? 'bg-amber-100/80 border-amber-300/70 text-amber-950' : 'bg-emerald-100/70 border-emerald-300/60 text-emerald-950'} border rounded-xl sm:rounded-2xl flex items-center justify-between gap-2.5 shadow-2xs transition`;
           item.innerHTML = `
             <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
               <div class="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-white border border-slate-200 flex flex-col items-center justify-center text-slate-800 shadow-inner shrink-0">
-                <span class="text-[8px] sm:text-[9px] font-bold text-slate-400">${dayOfWeek}</span>
-                <span class="text-xs sm:text-base font-black text-slate-800 leading-none">${dayNum}</span>
+                <span class="text-[8px] sm:text-[9px] font-bold text-slate-400">${weekDays[dateObj.getDay()]}</span>
+                <span class="text-xs sm:text-base font-black text-slate-800 leading-none">${dateObj.getDate()}</span>
               </div>
               <div class="space-y-0.5 min-w-0">
-                <span class="inline-block px-1.5 py-0.2 ${badgeBg} rounded-md text-[9px] font-black shadow-xs">${timeLabel}</span>
-                <p class="font-bold text-xs sm:text-sm break-words">${title}</p>
+                <span class="inline-block px-1.5 py-0.2 ${is20 ? 'bg-orange-500' : 'bg-emerald-600'} text-white rounded-md text-[9px] font-black shadow-xs">${is20 ? '20시' : '18시'}</span>
+                <p class="font-bold text-xs sm:text-sm break-words">${evt.summary || '일정'}</p>
               </div>
-            </div>
-          `;
+            </div>`;
           listWrapper.appendChild(item);
         });
       });
 
-      container.innerHTML = '';
       container.appendChild(listWrapper);
     }
 
     function getGroupedEventsMapFull() {
-      const eventsByDate = {};
+      const map = {};
       calendarEventsList.forEach(evt => {
         const startRaw = evt.start?.dateTime || evt.start?.date;
         if (!startRaw) return;
-        const dateKey = startRaw.substring(0, 10);
-        if (!eventsByDate[dateKey]) {
-          eventsByDate[dateKey] = { evt18: null, evt20: null };
-        }
-        
-        const startObj = new Date(startRaw);
-        const hour = startObj.getHours();
-        
-        if (hour >= 19) {
-          eventsByDate[dateKey].evt20 = { title: evt.summary || '일정' };
-        } else {
-          eventsByDate[dateKey].evt18 = { title: evt.summary || '일정' };
-        }
+        const dKey = startRaw.substring(0, 10);
+        if (!map[dKey]) map[dKey] = { evt18: null, evt20: null };
+        if (new Date(startRaw).getHours() >= 19) map[dKey].evt20 = { title: evt.summary || '일정' };
+        else map[dKey].evt18 = { title: evt.summary || '일정' };
       });
-      return eventsByDate;
+      return map;
     }
 
     function openModal(dateStr, dayItem) {
-      const modal = document.getElementById('eventModal');
-      const titleEl = document.getElementById('modalDateTitle');
-      const bodyEl = document.getElementById('modalContentBody');
-
       const parts = dateStr.split('-');
-      titleEl.innerText = `${parts[0]}년 ${parseInt(parts[1])}월 ${parseInt(parts[2])}일 상세 일정`;
-
+      document.getElementById('modalDateTitle').innerText = `${parts[0]}년 ${parseInt(parts[1])}월 ${parseInt(parts[2])}일 상세 일정`;
+      
       let html = '';
-      if (dayItem.evt18) {
-        html += `
-          <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl space-y-1">
-            <span class="inline-block px-2 py-0.5 bg-emerald-600 text-white rounded-md text-[10px] font-black">18시 일정</span>
-            <p class="font-bold text-slate-800 text-sm sm:text-base">${dayItem.evt18.title}</p>
-          </div>
-        `;
-      }
-      if (dayItem.evt20) {
-        html += `
-          <div class="p-3 bg-amber-50 border border-amber-200 rounded-2xl space-y-1">
-            <span class="inline-block px-2 py-0.5 bg-orange-500 text-white rounded-md text-[10px] font-black">20시 일정</span>
-            <p class="font-bold text-slate-800 text-sm sm:text-base">${dayItem.evt20.title}</p>
-          </div>
-        `;
-      }
-
-      bodyEl.innerHTML = html;
-      modal.classList.remove('hidden');
+      if (dayItem.evt18) html += `<div class="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl space-y-1"><span class="inline-block px-2 py-0.5 bg-emerald-600 text-white rounded-md text-[10px] font-black">18시 일정</span><p class="font-bold text-slate-800 text-sm sm:text-base">${dayItem.evt18.title}</p></div>`;
+      if (dayItem.evt20) html += `<div class="p-3 bg-amber-50 border border-amber-200 rounded-2xl space-y-1"><span class="inline-block px-2 py-0.5 bg-orange-500 text-white rounded-md text-[10px] font-black">20시 일정</span><p class="font-bold text-slate-800 text-sm sm:text-base">${dayItem.evt20.title}</p></div>`;
+      
+      document.getElementById('modalContentBody').innerHTML = html;
+      document.getElementById('eventModal').classList.remove('hidden');
     }
 
-    function closeModal() {
-      document.getElementById('eventModal').classList.add('hidden');
-    }
-
-    function formatYearMonthDay(date) {
-      const y = date.getFullYear();
-      const m = String(date.getMonth() + 1).padStart(2, '0');
-      const d = String(date.getDate()).padStart(2, '0');
-      return `${y}-${m}-${d}`;
-    }
+    function closeModal() { document.getElementById('eventModal').classList.add('hidden'); }
 
     function processCalendarData(events) {
       document.getElementById('totalEvents').innerHTML = `${events.length}<span class="text-xs sm:text-lg font-bold text-orange-500 ml-1">건</span>`;
-
-      const monthlyTimeCount = {};
-      const attendeeData = {}; 
-      const nowTimestamp = new Date().getTime();
+      const mCount = {}, attendees = {}, nowTs = Date.now();
 
       events.forEach(evt => {
         const startRaw = evt.start?.dateTime || evt.start?.date;
         if (!startRaw) return;
-
-        const eventDateObj = new Date(startRaw);
-        const monthKey = startRaw.substring(0, 7);
+        const eDate = new Date(startRaw);
+        const mKey = startRaw.substring(0, 7);
         
-        if (!monthlyTimeCount[monthKey]) {
-          monthlyTimeCount[monthKey] = { '18시': 0, '20시': 0 };
-        }
+        if (!mCount[mKey]) mCount[mKey] = { '18시': 0, '20시': 0 };
+        if (eDate.getHours() >= 19) mCount[mKey]['20시']++; else mCount[mKey]['18시']++;
 
-        const hour = eventDateObj.getHours();
-        if (hour >= 19) {
-          monthlyTimeCount[monthKey]['20시'] += 1;
-        } else {
-          monthlyTimeCount[monthKey]['18시'] += 1;
-        }
-
-        const yy = String(eventDateObj.getFullYear()).substring(2);
-        const mm = String(eventDateObj.getMonth() + 1).padStart(2, '0');
-        const dd = String(eventDateObj.getDate()).padStart(2, '0');
-        const formattedDate = `${yy}.${mm}.${dd}`;
-
+        const fDate = `${String(eDate.getFullYear()).substring(2)}.${String(eDate.getMonth() + 1).padStart(2, '0')}.${String(eDate.getDate()).padStart(2, '0')}`;
         const title = evt.summary || '';
         if (!title) return;
 
-        const cleanTitle = title.replace(/\([^)]*\)/g, "");
-        
-        const tokens = cleanTitle.split(/[,/\s]+/);
-        tokens.forEach(token => {
+        title.replace(/\([^)]*\)/g, "").split(/[,/\s]+/).forEach(token => {
           const name = token.trim();
-          const isTimeOrDateCode = /[월화수목금토일]\d/.test(name) || name.includes('/') || /^\d+$/.test(name) || name.includes(':');
-          const isGuestKeyword = name.includes('게스트') || name === '게스트';
-
-          if (name && !isTimeOrDateCode && !isGuestKeyword && name.length >= 2) {
-            if (!attendeeData[name]) {
-              attendeeData[name] = { count: 0, lastDate: '-', lastTimestamp: 0 };
-            }
-            attendeeData[name].count += 1;
-            
-            if (eventDateObj.getTime() <= nowTimestamp && eventDateObj.getTime() >= attendeeData[name].lastTimestamp) {
-              attendeeData[name].lastDate = formattedDate;
-              attendeeData[name].lastTimestamp = eventDateObj.getTime();
+          if (name && !/[월화수목금토일]\d/.test(name) && !name.includes('/') && !/^\d+$/.test(name) && !name.includes(':') && !name.includes('게스트') && name.length >= 2) {
+            if (!attendees[name]) attendees[name] = { count: 0, lastDate: '-', lastTimestamp: 0 };
+            attendees[name].count++;
+            if (eDate.getTime() <= nowTs && eDate.getTime() >= attendees[name].lastTimestamp) {
+              attendees[name].lastDate = fDate;
+              attendees[name].lastTimestamp = eDate.getTime();
             }
           }
         });
       });
 
-      const sortedAttendees = Object.entries(attendeeData).sort((a, b) => b[1].count - a[1].count);
+      const sorted = Object.entries(attendees).sort((a, b) => b[1].count - a[1].count);
+      document.getElementById('totalAttendees').innerHTML = `${sorted.length}<span class="text-xs sm:text-lg font-bold text-emerald-500 ml-1">명</span>`;
+      document.getElementById('topAttendee').innerText = sorted[0] ? `${sorted[0][0]} (${sorted[0][1].count}회)` : '-';
 
-      document.getElementById('totalAttendees').innerHTML = `${sortedAttendees.length}<span class="text-xs sm:text-lg font-bold text-emerald-500 ml-1">명</span>`;
-      document.getElementById('topAttendee').innerText = sortedAttendees[0] ? `${sortedAttendees[0][0]} (${sortedAttendees[0][1].count}회)` : '-';
-
-      renderTable(sortedAttendees);
-      renderCharts(monthlyTimeCount, sortedAttendees);
+      renderTable(sorted);
+      renderCharts(mCount, sorted);
     }
 
     function renderTable(memberList) {
       const tbody = document.getElementById('attendeeTableBody');
-      tbody.innerHTML = '';
-      if (memberList.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-slate-400 font-medium text-xs sm:text-sm">조회된 기간 내 인식된 참석자가 없습니다.</td></tr>';
-        return;
-      }
+      tbody.innerHTML = memberList.length === 0 ? '<tr><td colspan="4" class="p-8 text-center text-slate-400 font-medium text-xs sm:text-sm">조회된 기간 내 인식된 참석자가 없습니다.</td></tr>' : '';
+      
       memberList.forEach(([name, data], idx) => {
-        let rankBadge = `<span class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full text-xs font-bold bg-slate-200 text-slate-600 shadow-inner">${idx + 1}</span>`;
+        let badge = `<span class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full text-xs font-bold bg-slate-200 text-slate-600 shadow-inner">${idx + 1}</span>`;
         let rowBg = "hover:bg-slate-50";
+        if (idx === 0) { badge = '🥇'; rowBg = "bg-amber-50/40 hover:bg-amber-50/60"; }
+        else if (idx === 1) badge = '🥈';
+        else if (idx === 2) badge = '🥉';
 
-        if (idx === 0) {
-          rankBadge = `<span class="inline-flex items-center justify-center w-8 sm:w-11 h-8 sm:h-11 rounded-xl sm:rounded-2xl text-base sm:text-2xl font-bold bg-gradient-to-b from-amber-100 to-amber-200 text-amber-800 shadow-md border-2 border-amber-300">🥇</span>`;
-          rowBg = "bg-amber-50/40 hover:bg-amber-50/60";
-        } else if (idx === 1) {
-          rankBadge = `<span class="inline-flex items-center justify-center w-8 sm:w-11 h-8 sm:h-11 rounded-xl sm:rounded-2xl text-base sm:text-2xl font-bold bg-gradient-to-b from-slate-100 to-slate-200 text-slate-700 shadow-md border-2 border-slate-300">🥈</span>`;
-        } else if (idx === 2) {
-          rankBadge = `<span class="inline-flex items-center justify-center w-8 sm:w-11 h-8 sm:h-11 rounded-xl sm:rounded-2xl text-base sm:text-2xl font-bold bg-gradient-to-b from-orange-100 to-orange-200 text-orange-800 shadow-md border-2 border-orange-300">🥉</span>`;
-        }
-
-        tbody.innerHTML += `
-          <tr class="${rowBg} transition-colors duration-150">
-            <td class="p-2.5 sm:p-4.5 text-center flex items-center justify-center">${rankBadge}</td>
-            <td class="p-2.5 sm:p-4.5 font-bold text-slate-800 text-xs sm:text-base">${name}</td>
-            <td class="p-2.5 sm:p-4.5 text-center">
-              <span class="inline-block px-2 sm:px-3 py-1 bg-slate-100 text-slate-700 rounded-md sm:rounded-lg text-[10px] sm:text-xs font-bold border border-slate-200 shadow-inner">${data.lastDate}</span>
-            </td>
-            <td class="p-2.5 sm:p-4.5 font-black text-orange-600 text-right pr-4 sm:pr-8 text-xs sm:text-base">${data.count}<span class="text-[10px] sm:text-xs font-bold text-slate-400 ml-1">회</span></td>
-          </tr>
-        `;
+        tbody.innerHTML += `<tr class="${rowBg} transition-colors duration-150">
+          <td class="p-2.5 sm:p-4.5 text-center flex items-center justify-center">${typeof badge === 'string' && badge.length > 2 ? badge : `<span class="inline-flex items-center justify-center w-8 sm:w-11 h-8 sm:h-11 rounded-xl sm:rounded-2xl text-base sm:text-2xl font-bold bg-gradient-to-b from-amber-100 to-amber-200 text-amber-800 shadow-md border-2 border-amber-300">${badge}</span>`}</td>
+          <td class="p-2.5 sm:p-4.5 font-bold text-slate-800 text-xs sm:text-base">${name}</td>
+          <td class="p-2.5 sm:p-4.5 text-center"><span class="inline-block px-2 sm:px-3 py-1 bg-slate-100 text-slate-700 rounded-md sm:rounded-lg text-[10px] sm:text-xs font-bold border border-slate-200 shadow-inner">${data.lastDate}</span></td>
+          <td class="p-2.5 sm:p-4.5 font-black text-orange-600 text-right pr-4 sm:pr-8 text-xs sm:text-base">${data.count}<span class="text-[10px] sm:text-xs font-bold text-slate-400 ml-1">회</span></td>
+        </tr>`;
       });
     }
 
-    function renderCharts(monthlyTimeCount, attendeeList) {
-      const mCtx = document.getElementById('monthlyChart').getContext('2d');
-      const aCtx = document.getElementById('attendeeChart').getContext('2d');
-
+    function renderCharts(mCount, attendeeList) {
       if (monthlyChartInstance) monthlyChartInstance.destroy();
       if (attendeeChartInstance) attendeeChartInstance.destroy();
 
-      const sortedKeys = Object.keys(monthlyTimeCount).sort();
-      const mLabels = sortedKeys.map(k => {
-        const parts = k.split('-');
-        return parts.length === 2 ? parts[0].substring(2) + '.' + parts[1] : k;
-      });
+      const keys = Object.keys(mCount).sort();
+      const mCtx = document.getElementById('monthlyChart').getContext('2d');
+      const aCtx = document.getElementById('attendeeChart').getContext('2d');
 
-      const data18h = sortedKeys.map(k => monthlyTimeCount[k]['18시']);
-      const data20h = sortedKeys.map(k => monthlyTimeCount[k]['20시']);
-
-      const grad18 = mCtx.createLinearGradient(0, 0, 0, 260);
-      grad18.addColorStop(0, '#fb923c');
-      grad18.addColorStop(1, '#ea580c');
-
-      const grad20 = mCtx.createLinearGradient(0, 0, 0, 260);
-      grad20.addColorStop(0, '#38bdf8');
-      grad20.addColorStop(1, '#0284c7');
+      const g18 = mCtx.createLinearGradient(0, 0, 0, 260); g18.addColorStop(0, '#fb923c'); g18.addColorStop(1, '#ea580c');
+      const g20 = mCtx.createLinearGradient(0, 0, 0, 260); g20.addColorStop(0, '#38bdf8'); g20.addColorStop(1, '#0284c7');
 
       monthlyChartInstance = new Chart(mCtx, {
         type: 'bar',
         data: {
-          labels: mLabels,
+          labels: keys.map(k => k.substring(2).replace('-', '.')),
           datasets: [
-            { label: '18시', data: data18h, backgroundColor: grad18, borderRadius: 4, barPercentage: 0.45, categoryPercentage: 0.65 },
-            { label: '20시', data: data20h, backgroundColor: grad20, borderRadius: 4, barPercentage: 0.45, categoryPercentage: 0.65 }
+            { label: '18시', data: keys.map(k => mCount[k]['18시']), backgroundColor: g18, borderRadius: 4, barPercentage: 0.45, categoryPercentage: 0.65 },
+            { label: '20시', data: keys.map(k => mCount[k]['20시']), backgroundColor: g20, borderRadius: 4, barPercentage: 0.45, categoryPercentage: 0.65 }
           ]
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: true, position: 'top', labels: { font: { family: 'Pretendard', weight: 'bold', size: 10 }, boxWidth: 8 } } },
-          scales: {
-            y: { grid: { color: '#e2e8f0' }, ticks: { font: { size: 9, family: 'Pretendard', weight: '600' }, color: '#64748b' } },
-            x: { grid: { display: false }, ticks: { font: { size: 9, family: 'Pretendard', weight: '600' }, color: '#475569' } }
-          }
-        }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { font: { family: 'Pretendard', weight: 'bold', size: 10 }, boxWidth: 8 } } }, scales: { y: { grid: { color: '#e2e8f0' } }, x: { grid: { display: false } } } }
       });
 
       const top10 = attendeeList.slice(0, 10);
-      const gradTop = aCtx.createLinearGradient(0, 0, 300, 0);
-      gradTop.addColorStop(0, '#34d399');
-      gradTop.addColorStop(1, '#059669');
+      const gTop = aCtx.createLinearGradient(0, 0, 300, 0); gTop.addColorStop(0, '#34d399'); gTop.addColorStop(1, '#059669');
 
       attendeeChartInstance = new Chart(aCtx, {
         type: 'bar',
         data: {
           labels: top10.map(i => i[0]),
-          datasets: [{ label: '참석 횟수', data: top10.map(i => i[1].count), backgroundColor: gradTop, borderRadius: 6, barPercentage: 0.55, categoryPercentage: 0.65 }]
+          datasets: [{ label: '참석 횟수', data: top10.map(i => i[1].count), backgroundColor: gTop, borderRadius: 6, barPercentage: 0.55, categoryPercentage: 0.65 }]
         },
-        options: {
-          indexAxis: 'y',
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: {
-            x: { grid: { color: '#e2e8f0' }, ticks: { font: { size: 9, family: 'Pretendard', weight: '600' }, color: '#64748b' } },
-            y: { grid: { display: false }, ticks: { font: { size: 9, family: 'Pretendard', weight: '600' }, color: '#475569' } }
-          }
-        }
+        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { color: '#e2e8f0' } }, y: { grid: { display: false } } } }
       });
     }
   </script>
