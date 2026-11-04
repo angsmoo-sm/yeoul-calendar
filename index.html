@@ -180,14 +180,13 @@
     </div>
   </div>
 
-  <!-- 모달 -->
+  <!-- 모달 (상단 X 버튼 제거, 하단 확인 버튼 배치) -->
   <div id="eventModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-3xl p-5 sm:p-6 max-w-sm w-full shadow-2xl border border-slate-100 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+    <div class="bg-white rounded-3xl p-4 sm:p-5 max-w-sm w-full shadow-2xl border border-slate-100 space-y-3">
+      <div class="border-b border-slate-100 pb-2">
         <h3 id="modalDateTitle" class="text-base sm:text-lg font-black text-slate-800">날짜</h3>
-        <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold flex items-center justify-center transition">✕</button>
       </div>
-      <div id="modalContentBody" class="space-y-3 max-h-[60vh] overflow-y-auto pr-1"></div>
+      <div id="modalContentBody" class="space-y-2 max-h-[60vh] overflow-y-auto pr-1"></div>
       <button onclick="closeModal()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs sm:text-sm transition shadow-sm">확인</button>
     </div>
   </div>
@@ -302,7 +301,6 @@
         const dayItem = eventsByDate[dateStr] || { evt18: null, evt20: null };
 
         if (dayItem.evt18 || dayItem.evt20) {
-          // 모바일 화면(640px 미만) 월간보기에서만 팝업 클릭 이벤트 적용
           if (window.innerWidth < 640) {
             dayCell.classList.add('cursor-pointer', 'hover:bg-amber-50/30');
             dayCell.onclick = () => openModal(dateStr, dayItem);
@@ -404,8 +402,8 @@
       document.getElementById('modalDateTitle').innerText = `${parts[0]}년 ${parseInt(parts[1])}월 ${parseInt(parts[2])}일`;
       
       let html = '';
-      if (dayItem.evt18) html += `<div class="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl space-y-1"><span class="inline-block px-2 py-0.5 bg-emerald-600 text-white rounded-md text-[10px] font-black">18시 일정</span><p class="font-bold text-slate-800 text-sm sm:text-base">${dayItem.evt18.title}</p></div>`;
-      if (dayItem.evt20) html += `<div class="p-3 bg-amber-50 border border-amber-200 rounded-2xl space-y-1"><span class="inline-block px-2 py-0.5 bg-orange-500 text-white rounded-md text-[10px] font-black">20시 일정</span><p class="font-bold text-slate-800 text-sm sm:text-base">${dayItem.evt20.title}</p></div>`;
+      if (dayItem.evt18) html += `<div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl space-y-1"><span class="inline-block px-2 py-0.5 bg-emerald-600 text-white rounded-md text-[10px] font-black">18시 일정</span><p class="font-bold text-slate-800 text-sm sm:text-base">${dayItem.evt18.title}</p></div>`;
+      if (dayItem.evt20) html += `<div class="p-2.5 bg-amber-50 border border-amber-200 rounded-xl space-y-1"><span class="inline-block px-2 py-0.5 bg-orange-500 text-white rounded-md text-[10px] font-black">20시 일정</span><p class="font-bold text-slate-800 text-sm sm:text-base">${dayItem.evt20.title}</p></div>`;
       
       document.getElementById('modalContentBody').innerHTML = html;
       document.getElementById('eventModal').classList.remove('hidden');
