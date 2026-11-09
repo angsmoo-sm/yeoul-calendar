@@ -221,12 +221,13 @@
       return evt.summary || '일정';
     }
 
+    // 설명에서 예약/대관 앞의 2글자(이름)만 추출
     function parseReservationTag(descriptionText) {
       if (!descriptionText) return '';
       const regex = /([가-힣]{2})\s*(예약|대관)/;
       const match = descriptionText.match(regex);
       if (match) {
-        return `${match[1]} 예약`;
+        return match[1]; // "예약" 글자를 제외하고 이름만 반환
       }
       return '';
     }
@@ -275,7 +276,7 @@
       else renderScheduleListView();
     }
 
-    // 1. 월간보기 (PC: 배경색 일치 및 시각적 일체형 2번째 줄 우측 배치 / 모바일: 간결 텍스트)
+    // 1. 월별 월간보기 (PC 화면: 이름만 표기, 2번째 줄 우측 고정)
     function renderMonthCalendarView() {
       const y = currentViewDate.getFullYear(), m = currentViewDate.getMonth() + 1;
       document.getElementById('calendarTitle').innerText = `${y}년 ${m}월 모임 일정표`;
@@ -326,14 +327,12 @@
           const evt = dayItem[key];
           if (evt) {
             const rawTitle = formatEventDisplayTitle(evt.raw);
-            const reservationTag = parseReservationTag(evt.raw.description);
+            const reservationTag = parseReservationTag(evt.raw.description); // 이름만 반환 (예: "상민")
             const shortTxt = rawTitle.split(/[\s\n]+/)[0];
             
-            // 카드 테마 배경색 및 예약자 텍스트 컬러 (18시: Emerald, 20시: Orange)
             const bgClass = key === 'evt18' ? 'bg-emerald-100/80 border-emerald-300/70 text-emerald-950' : 'bg-amber-100/90 border-amber-300/80 text-amber-950';
             const tagColor = key === 'evt18' ? 'text-emerald-800' : 'text-orange-800';
             
-            // 예약자 문구의 배경을 카드 자체 배경과 투명하게 통일하고 높이와 위치를 시각적 일체형으로 조율
             eventsHTML += `<div class="${bgClass} border px-1 py-0.5 rounded text-[10px] sm:text-xs leading-tight font-bold sm:relative sm:h-[2.3rem] overflow-hidden">
               <span class="sm:hidden block text-center truncate" style="font-variant-numeric: tabular-nums;">${shortTxt}</span>
               <div class="hidden sm:block text-left break-words leading-snug pr-1">${rawTitle}</div>
@@ -353,7 +352,7 @@
       container.appendChild(grid);
     }
 
-    // 2. 일정보기 (배지에 시간+예약자 통합, PC 배지 글씨 크기 확대)
+    // 2. 일정보기 (이름만 결합된 배지, 폰트 크기 확대 적용)
     function renderScheduleListView() {
       const y = currentViewDate.getFullYear(), m = currentViewDate.getMonth() + 1;
       document.getElementById('calendarTitle').innerText = `${y}년 ${m}월 모임 일정표`;
@@ -388,7 +387,7 @@
           const hour = new Date(evt.start?.dateTime || evt.start?.date).getHours();
           const is20 = hour >= 19;
           const displayTitle = formatEventDisplayTitle(evt);
-          const reservationTag = parseReservationTag(evt.description);
+          const reservationTag = parseReservationTag(evt.description); // 이름만 추출
           
           const timeText = is20 ? '20시' : '18시';
           const badgeText = reservationTag ? `${timeText} · ${reservationTag}` : timeText;
@@ -403,8 +402,8 @@
               </div>
               <div class="space-y-1 min-w-0">
                 <div class="flex items-center gap-2 flex-wrap">
-                  <!-- 일정보기 영역 배지: PC에서 큼직하게 돋보이도록 sm:text-xs 및 sm:px-2.5 확장 -->
-                  <span class="inline-block px-1.5 sm:px-2.5 py-0.5 ${is20 ? 'bg-orange-500' : 'bg-emerald-600'} text-white rounded-md text-[9px] sm:text-xs font-black shadow-xs">${badgeText}</span>
+                  <!-- 일정보기 배지 글씨 크기 확대 (sm:text-xs -> sm:text-[11px] / 패딩 보정) -->
+                  <span class="inline-block px-1.5 sm:px-2.5 py-0.5 ${is20 ? 'bg-orange-500' : 'bg-emerald-600'} text-white rounded-md text-[10px] sm:text-[11px] font-black shadow-xs">${badgeText}</span>
                 </div>
                 <p class="font-bold text-xs sm:text-sm break-words">${displayTitle}</p>
               </div>
@@ -429,7 +428,7 @@
       return map;
     }
 
-    // 3. 모바일 월간보기 팝업창 (배지 안에 시간 + 예약자 중점(·) 통합 표기)
+    // 3. 모바일 월간보기 팝업창 (배지 글씨 크기 11px 확대, 이름만 표기)
     function openModal(dateStr, dayItem) {
       const parts = dateStr.split('-');
       document.getElementById('modalDateTitle').innerText = `${parts[0]}년 ${parseInt(parts[1])}월 ${parseInt(parts[2])}일`;
@@ -437,24 +436,24 @@
       let html = '';
       if (dayItem.evt18) {
         const title18 = formatEventDisplayTitle(dayItem.evt18.raw);
-        const tag18 = parseReservationTag(dayItem.evt18.raw.description);
+        const tag18 = parseReservationTag(dayItem.evt18.raw.description); // 이름만
         const badge18 = tag18 ? `18시 · ${tag18}` : '18시';
         
         html += `<div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl space-y-1">
           <div class="flex items-center gap-2">
-            <span class="inline-block px-2 py-0.5 bg-emerald-600 text-white rounded-md text-[10px] font-black">${badge18}</span>
+            <span class="inline-block px-2 py-0.5 bg-emerald-600 text-white rounded-md text-[11px] font-black">${badge18}</span>
           </div>
           <p class="font-bold text-slate-800 text-sm sm:text-base">${title18}</p>
         </div>`;
       }
       if (dayItem.evt20) {
         const title20 = formatEventDisplayTitle(dayItem.evt20.raw);
-        const tag20 = parseReservationTag(dayItem.evt20.raw.description);
+        const tag20 = parseReservationTag(dayItem.evt20.raw.description); // 이름만
         const badge20 = tag20 ? `20시 · ${tag20}` : '20시';
         
         html += `<div class="p-2.5 bg-amber-50 border border-amber-200 rounded-xl space-y-1">
           <div class="flex items-center gap-2">
-            <span class="inline-block px-2 py-0.5 bg-orange-500 text-white rounded-md text-[10px] font-black">${badge20}</span>
+            <span class="inline-block px-2 py-0.5 bg-orange-500 text-white rounded-md text-[11px] font-black">${badge20}</span>
           </div>
           <p class="font-bold text-slate-800 text-sm sm:text-base">${title20}</p>
         </div>`;
