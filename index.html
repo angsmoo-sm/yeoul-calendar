@@ -278,7 +278,7 @@
       else renderScheduleListView();
     }
 
-    // 1. 월간보기 (모바일 원본 유지, PC 2번째 줄 우측 정렬 및 참석자 명단 2줄 허용)
+    // 1. 월간보기 (모바일 원본 유지, PC 2번째 줄 우측 정렬 및 참석자 명단 줄바꿈 분리)
     function renderMonthCalendarView() {
       const y = currentViewDate.getFullYear(), m = currentViewDate.getMonth() + 1;
       document.getElementById('calendarTitle').innerText = `${y}년 ${m}월 모임 일정표`;
@@ -334,14 +334,14 @@
             const bgClass = key === 'evt18' ? 'bg-emerald-100/80 border-emerald-300/70 text-emerald-950' : 'bg-amber-100/90 border-amber-300/80 text-amber-950';
             const tagColor = key === 'evt18' ? 'text-emerald-800' : 'text-orange-800';
             
-            // sm:line-clamp-2를 통해 2줄까지 허용 (truncate 제거하여 말풍선 생략 방지)
-            eventsHTML += `<div class="${bgClass} border px-0.5 py-0.5 rounded text-[10px] sm:text-xs leading-tight font-bold sm:line-clamp-2 sm:overflow-hidden sm:h-[2.3rem]">
+            // PC 월간보기: 참석자 명단(줄바꿈 허용, 말줄임표 없음)과 예약자 문구(2번째 줄 우측 고정)를 분리 구조로 적용
+            eventsHTML += `<div class="${bgClass} border px-1 py-0.5 rounded text-[10px] sm:text-xs leading-tight font-bold sm:relative sm:h-[2.3rem] overflow-hidden">
               <span class="sm:hidden block text-center truncate" style="font-variant-numeric: tabular-nums;">${shortTxt}</span>
-              <div class="hidden sm:block text-left">${rawTitle}</div>
-              ${reservationTag ? `<div class="hidden sm:block text-right text-[11px] font-medium ${tagColor}">${reservationTag}</div>` : ''}
+              <div class="hidden sm:block text-left break-words leading-snug pr-1">${rawTitle}</div>
+              ${reservationTag ? `<div class="hidden sm:block sm:absolute sm:bottom-0.5 sm:right-1 text-[11px] font-medium ${tagColor} bg-white/60 px-1 rounded">${reservationTag}</div>` : ''}
             </div>`;
           } else {
-            eventsHTML += `<div class="opacity-0 border border-transparent px-0.5 py-0.5 rounded text-[10px] sm:text-xs leading-tight pointer-events-none select-none sm:h-[2.3rem]"><span class="sm:hidden block truncate">&nbsp;</span><span class="hidden sm:block">&nbsp;</span></div>`;
+            eventsHTML += `<div class="opacity-0 border border-transparent px-1 py-0.5 rounded text-[10px] sm:text-xs leading-tight pointer-events-none select-none sm:h-[2.3rem]"><span class="sm:hidden block truncate">&nbsp;</span><span class="hidden sm:block">&nbsp;</span></div>`;
           }
         });
         eventsHTML += `</div>`;
