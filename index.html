@@ -223,7 +223,7 @@
       return evt.summary || '일정';
     }
 
-    // 📌 일정 설명에서 앞 2글자 추출 후 무조건 "예약"으로 고정 표기 (이모지 제외)
+    // 일정 설명에서 앞 2글자 추출 후 무조건 "예약"으로 고정 표기 (이모지 없음)
     function parseReservationTag(descriptionText) {
       if (!descriptionText) return '';
       const regex = /([가-힣]{2})\s*(예약|대관)/;
@@ -278,7 +278,7 @@
       else renderScheduleListView();
     }
 
-    // 1. 월간보기 (모바일 원본 유지, PC 2번째 줄 우측 정렬)
+    // 1. 월간보기 (모바일 원본 유지, PC 2번째 줄 우측 정렬 및 참석자 명단 2줄 허용)
     function renderMonthCalendarView() {
       const y = currentViewDate.getFullYear(), m = currentViewDate.getMonth() + 1;
       document.getElementById('calendarTitle').innerText = `${y}년 ${m}월 모임 일정표`;
@@ -334,10 +334,11 @@
             const bgClass = key === 'evt18' ? 'bg-emerald-100/80 border-emerald-300/70 text-emerald-950' : 'bg-amber-100/90 border-amber-300/80 text-amber-950';
             const tagColor = key === 'evt18' ? 'text-emerald-800' : 'text-orange-800';
             
-            eventsHTML += `<div class="${bgClass} border px-0.5 py-0.5 rounded text-[10px] sm:text-xs leading-tight font-bold sm:line-clamp-2 sm:overflow-hidden sm:text-ellipsis sm:h-[2.3rem]">
+            // sm:line-clamp-2를 통해 2줄까지 허용 (truncate 제거하여 말풍선 생략 방지)
+            eventsHTML += `<div class="${bgClass} border px-0.5 py-0.5 rounded text-[10px] sm:text-xs leading-tight font-bold sm:line-clamp-2 sm:overflow-hidden sm:h-[2.3rem]">
               <span class="sm:hidden block text-center truncate" style="font-variant-numeric: tabular-nums;">${shortTxt}</span>
-              <div class="hidden sm:block text-left truncate">${rawTitle}</div>
-              ${reservationTag ? `<div class="hidden sm:block text-right text-[11px] font-normal ${tagColor} truncate">${reservationTag}</div>` : ''}
+              <div class="hidden sm:block text-left">${rawTitle}</div>
+              ${reservationTag ? `<div class="hidden sm:block text-right text-[11px] font-medium ${tagColor}">${reservationTag}</div>` : ''}
             </div>`;
           } else {
             eventsHTML += `<div class="opacity-0 border border-transparent px-0.5 py-0.5 rounded text-[10px] sm:text-xs leading-tight pointer-events-none select-none sm:h-[2.3rem]"><span class="sm:hidden block truncate">&nbsp;</span><span class="hidden sm:block">&nbsp;</span></div>`;
@@ -353,7 +354,7 @@
       container.appendChild(grid);
     }
 
-    // 2. 일정보기 (시간 배지 바로 옆 간격 배치, 테마 일치형 색상, 굵기 완화)
+    // 2. 일정보기 (시간 배지 바로 옆 간격 배치, 세미 볼드 굵기, 테마 일치형 색상)
     function renderScheduleListView() {
       const y = currentViewDate.getFullYear(), m = currentViewDate.getMonth() + 1;
       document.getElementById('calendarTitle').innerText = `${y}년 ${m}월 모임 일정표`;
@@ -402,7 +403,7 @@
               <div class="space-y-0.5 min-w-0">
                 <div class="flex items-center gap-2 flex-wrap">
                   <span class="inline-block px-1.5 py-0.2 ${is20 ? 'bg-orange-500' : 'bg-emerald-600'} text-white rounded-md text-[9px] font-black shadow-xs">${is20 ? '20시' : '18시'}</span>
-                  ${reservationTag ? `<span class="font-normal text-xs sm:text-sm ${tagColor}">${reservationTag}</span>` : ''}
+                  ${reservationTag ? `<span class="font-medium text-xs sm:text-sm ${tagColor}">${reservationTag}</span>` : ''}
                 </div>
                 <p class="font-bold text-xs sm:text-sm break-words">${displayTitle}</p>
               </div>
@@ -427,7 +428,7 @@
       return map;
     }
 
-    // 3. 모바일 월간보기 팝업창 (시간 배지 바로 옆 간격 배치, 테마 일치형 색상, 굵기 완화)
+    // 3. 모바일 월간보기 팝업창 (시간 배지 바로 옆 간격 배치, 세미 볼드 굵기, 테마 일치형 색상)
     function openModal(dateStr, dayItem) {
       const parts = dateStr.split('-');
       document.getElementById('modalDateTitle').innerText = `${parts[0]}년 ${parseInt(parts[1])}월 ${parseInt(parts[2])}일`;
@@ -439,7 +440,7 @@
         html += `<div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl space-y-1">
           <div class="flex items-center gap-2">
             <span class="inline-block px-2 py-0.5 bg-emerald-600 text-white rounded-md text-[10px] font-black">18시 일정</span>
-            ${tag18 ? `<span class="font-normal text-xs sm:text-sm text-emerald-800">${tag18}</span>` : ''}
+            ${tag18 ? `<span class="font-medium text-xs sm:text-sm text-emerald-800">${tag18}</span>` : ''}
           </div>
           <p class="font-bold text-slate-800 text-sm sm:text-base">${title18}</p>
         </div>`;
@@ -450,7 +451,7 @@
         html += `<div class="p-2.5 bg-amber-50 border border-amber-200 rounded-xl space-y-1">
           <div class="flex items-center gap-2">
             <span class="inline-block px-2 py-0.5 bg-orange-500 text-white rounded-md text-[10px] font-black">20시 일정</span>
-            ${tag20 ? `<span class="font-normal text-xs sm:text-sm text-orange-800">${tag20}</span>` : ''}
+            ${tag20 ? `<span class="font-medium text-xs sm:text-sm text-orange-800">${tag20}</span>` : ''}
           </div>
           <p class="font-bold text-slate-800 text-sm sm:text-base">${title20}</p>
         </div>`;
