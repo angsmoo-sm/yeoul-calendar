@@ -226,7 +226,7 @@
       const regex = /([가-힣]{2})\s*(예약|대관)/;
       const match = descriptionText.match(regex);
       if (match) {
-        return match[1]; // 예약 글자 제외하고 이름만 반환
+        return match[1]; 
       }
       return '';
     }
@@ -275,7 +275,7 @@
       else renderScheduleListView();
     }
 
-    // 1. 월별 월간보기 (모바일: 앞 5글자 추출, 말줄임표 없음, 가운데 정렬 / PC: 유기적 블록형 정렬, 예약자 이름만 표기)
+    // 1. 월별 월간보기 (기존 원본 유지)
     function renderMonthCalendarView() {
       const y = currentViewDate.getFullYear(), m = currentViewDate.getMonth() + 1;
       document.getElementById('calendarTitle').innerText = `${y}년 ${m}월 모임 일정표`;
@@ -295,7 +295,6 @@
       const firstDay = new Date(y, m - 1, 1).getDay();
       const lastDate = new Date(y, m, 0).getDate();
       
-      // 브라우저 로컬 시간 기준으로 정확한 오늘 날짜 문자열 생성 (시차 오류 원천 차단)
       const now = new Date();
       const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
@@ -329,9 +328,8 @@
           const evt = dayItem[key];
           if (evt) {
             const rawTitle = formatEventDisplayTitle(evt.raw);
-            const reservationTag = parseReservationTag(evt.raw.description); // 이름만 추출
+            const reservationTag = parseReservationTag(evt.raw.description); 
             
-            // 모바일 화면: 앞 5글자 추출, 말줄임표 없음, 가운데 정렬
             const mobileShortText = rawTitle.substring(0, 5);
 
             const bgClass = key === 'evt18' ? 'bg-emerald-100/80 border-emerald-300/70 text-emerald-950' : 'bg-amber-100/90 border-amber-300/80 text-amber-950';
@@ -356,7 +354,7 @@
       container.appendChild(grid);
     }
 
-    // 2. 일정보기 (이름만 결합된 배지, 폰트 크기 확대 적용)
+    // 2. 일정보기 (모바일 및 PC 버전 일정보기에서 오늘 날짜 항목에 오렌지색 테두리 적용)
     function renderScheduleListView() {
       const y = currentViewDate.getFullYear(), m = currentViewDate.getMonth() + 1;
       document.getElementById('calendarTitle').innerText = `${y}년 ${m}월 모임 일정표`;
@@ -383,22 +381,32 @@
         grouped[dKey].push(e);
       });
 
+      const now = new Date();
+      const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
       Object.keys(grouped).sort().forEach(dKey => {
         const [gY, gM, gD] = dKey.split('-').map(Number);
         const dateObj = new Date(gY, gM - 1, gD);
+        const isToday = dKey === todayStr;
+
         grouped[dKey].sort((a, b) => new Date(a.start?.dateTime || a.start?.date).getHours() - new Date(b.start?.dateTime || b.start?.date).getHours());
 
         grouped[dKey].forEach(evt => {
           const hour = new Date(evt.start?.dateTime || evt.start?.date).getHours();
           const is20 = hour >= 19;
           const displayTitle = formatEventDisplayTitle(evt);
-          const reservationTag = parseReservationTag(evt.description); // 이름만 추출
+          const reservationTag = parseReservationTag(evt.description); 
           
           const timeText = is20 ? '20시' : '18시';
           const badgeText = reservationTag ? `${timeText} · ${reservationTag}` : timeText;
 
           const item = document.createElement('div');
-          item.className = `p-2 sm:p-3.5 ${is20 ? 'bg-amber-100/80 border-amber-300/70 text-amber-950' : 'bg-emerald-100/70 border-emerald-300/60 text-emerald-950'} border rounded-xl sm:rounded-2xl flex items-center justify-between gap-2.5 shadow-2xs transition`;
+          
+          // 일정보기 오늘 날짜 테두리 강조 적용
+          const todayBorderClass = isToday ? 'border-2 border-orange-500 shadow-sm ring-1 ring-orange-200' : (is20 ? 'border-amber-300/70' : 'border-emerald-300/60');
+          const bgToneClass = is20 ? 'bg-amber-100/80 text-amber-950' : 'bg-emerald-100/70 text-emerald-950';
+
+          item.className = `p-2 sm:p-3.5 ${bgToneClass} ${todayBorderClass} border rounded-xl sm:rounded-2xl flex items-center justify-between gap-2.5 transition`;
           item.innerHTML = `
             <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
               <div class="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-white border border-slate-200 flex flex-col items-center justify-center text-slate-800 shadow-inner shrink-0">
@@ -432,7 +440,7 @@
       return map;
     }
 
-    // 3. 모바일 월간보기 팝업창 (배지 글씨 크기 11px 확대, 이름만 표기)
+    // 3. 모바일 월간보기 팝업창 (기존 원본 유지)
     function openModal(dateStr, dayItem) {
       const parts = dateStr.split('-');
       document.getElementById('modalDateTitle').innerText = `${parts[0]}년 ${parseInt(parts[1])}월 ${parseInt(parts[2])}일`;
@@ -440,7 +448,7 @@
       let html = '';
       if (dayItem.evt18) {
         const title18 = formatEventDisplayTitle(dayItem.evt18.raw);
-        const tag18 = parseReservationTag(dayItem.evt18.raw.description); // 이름만
+        const tag18 = parseReservationTag(dayItem.evt18.raw.description); 
         const badge18 = tag18 ? `18시 · ${tag18}` : '18시';
         
         html += `<div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl space-y-1">
@@ -452,7 +460,7 @@
       }
       if (dayItem.evt20) {
         const title20 = formatEventDisplayTitle(dayItem.evt20.raw);
-        const tag20 = parseReservationTag(dayItem.evt20.raw.description); // 이름만
+        const tag20 = parseReservationTag(dayItem.evt20.raw.description); 
         const badge20 = tag20 ? `20시 · ${tag20}` : '20시';
         
         html += `<div class="p-2.5 bg-amber-50 border border-amber-200 rounded-xl space-y-1">
