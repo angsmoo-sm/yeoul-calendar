@@ -294,7 +294,10 @@
       const eventsByDate = getGroupedEventsMapFull();
       const firstDay = new Date(y, m - 1, 1).getDay();
       const lastDate = new Date(y, m, 0).getDate();
-      const todayStr = new Date().toISOString().substring(0, 10);
+      
+      // 한국 시간(KST) 기준 정확한 오늘 날짜 문자열 계산
+      const nowKST = new Date(new Date().getTime() + (9 * 60 * 60 * 1000) + (new Date().getTimezoneOffset() * 60000));
+      const todayStr = nowKST.toISOString().substring(0, 10);
 
       for (let i = 0; i < firstDay; i++) {
         const empty = document.createElement('div');
