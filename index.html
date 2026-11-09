@@ -275,7 +275,7 @@
       else renderScheduleListView();
     }
 
-    // 1. 월별 월간보기 (모바일: 원본 포맷 금18/0 복원 및 말줄임표 방지 / PC: 유기적 블록형 정렬, 예약자 이름만 표기)
+    // 1. 월별 월간보기 (모바일: 앞 5글자 추출, 말줄임표 없음, 가운데 정렬 / PC: 유기적 블록형 정렬, 예약자 이름만 표기)
     function renderMonthCalendarView() {
       const y = currentViewDate.getFullYear(), m = currentViewDate.getMonth() + 1;
       document.getElementById('calendarTitle').innerText = `${y}년 ${m}월 모임 일정표`;
@@ -295,7 +295,6 @@
       const firstDay = new Date(y, m - 1, 1).getDay();
       const lastDate = new Date(y, m, 0).getDate();
       const todayStr = new Date().toISOString().substring(0, 10);
-      const weekNames = ['일', '월', '화', '수', '목', '금', '토'];
 
       for (let i = 0; i < firstDay; i++) {
         const empty = document.createElement('div');
@@ -327,25 +326,21 @@
           const evt = dayItem[key];
           if (evt) {
             const rawTitle = formatEventDisplayTitle(evt.raw);
-            const reservationTag = parseReservationTag(evt.raw.description); // 이름만 추출 (예: 상민)
+            const reservationTag = parseReservationTag(evt.raw.description); // 이름만 추출
             
-            // 모바일 월간보기 원본 포맷 복원 (금18/0 등) 및 자간 축소로 말줄임표 방지
-            const dObj = new Date(dateStr);
-            const wName = weekNames[dObj.getDay()];
-            const timeNum = key === 'evt18' ? '18' : '20';
-            const attendeesCount = countAttendeesInTitle(rawTitle);
-            const mobileBadgeText = `${wName}${timeNum}/${attendeesCount}`;
+            // 모바일 화면: 앞 5글자 추출, 말줄임표 없음, 가운데 정렬
+            const mobileShortText = rawTitle.substring(0, 5);
 
             const bgClass = key === 'evt18' ? 'bg-emerald-100/80 border-emerald-300/70 text-emerald-950' : 'bg-amber-100/90 border-amber-300/80 text-amber-950';
             const tagColor = key === 'evt18' ? 'text-emerald-800' : 'text-orange-800';
             
             eventsHTML += `<div class="${bgClass} border px-0.5 sm:px-1 py-0.5 rounded text-[10px] sm:text-xs leading-tight font-bold sm:relative sm:h-[2.3rem] overflow-hidden">
-              <span class="sm:hidden block text-center truncate tracking-tighter" style="font-variant-numeric: tabular-nums;">${mobileBadgeText}</span>
+              <span class="sm:hidden block text-center tracking-tighter" style="font-variant-numeric: tabular-nums;">${mobileShortText}</span>
               <div class="hidden sm:block text-left break-words leading-snug pr-1">${rawTitle}</div>
               ${reservationTag ? `<div class="hidden sm:block sm:absolute sm:bottom-0.5 sm:right-1 text-[11px] font-medium ${tagColor} leading-none">${reservationTag}</div>` : ''}
             </div>`;
           } else {
-            eventsHTML += `<div class="opacity-0 border border-transparent px-0.5 sm:px-1 py-0.5 rounded text-[10px] sm:text-xs leading-tight pointer-events-none select-none sm:h-[2.3rem]"><span class="sm:hidden block truncate">&nbsp;</span><span class="hidden sm:block">&nbsp;</span></div>`;
+            eventsHTML += `<div class="opacity-0 border border-transparent px-0.5 sm:px-1 py-0.5 rounded text-[10px] sm:text-xs leading-tight pointer-events-none select-none sm:h-[2.3rem]"><span class="sm:hidden block">&nbsp;</span><span class="hidden sm:block">&nbsp;</span></div>`;
           }
         });
         eventsHTML += `</div>`;
@@ -356,18 +351,6 @@
 
       container.innerHTML = '';
       container.appendChild(grid);
-    }
-
-    function countAttendeesInTitle(title) {
-      if (!title) return 0;
-      let count = 0;
-      title.replace(/\([^)]*\)/g, "").split(/[,/\s]+/).forEach(token => {
-        const name = token.trim();
-        if (name && !/[월화수목금토일]\d/.test(name) && !name.includes('/') && !/^\d+$/.test(name) && !name.includes(':') && !name.includes('게스트') && name.length >= 2) {
-          count++;
-        }
-      });
-      return count;
     }
 
     // 2. 일정보기 (이름만 결합된 배지, 폰트 크기 확대 적용)
@@ -398,7 +381,8 @@
       });
 
       Object.keys(grouped).sort().forEach(dKey => {
-        const dateObj = new Date(dKey);
+        const [gY, gM, gD] = dKey.split('-').map(Number);
+        const dateObj = new Date(gY, gM - 1, gD);
         grouped[dKey].sort((a, b) => new Date(a.start?.dateTime || a.start?.date).getHours() - new Date(b.start?.dateTime || b.start?.date).getHours());
 
         grouped[dKey].forEach(evt => {
