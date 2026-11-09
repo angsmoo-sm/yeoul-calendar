@@ -63,7 +63,7 @@
             <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm shrink-0"></span>
             <h2 id="calendarTitle" class="text-sm sm:text-xl font-black text-slate-800 truncate">모임 일정표</h2>
           </div>
-          <!-- 모바일 월간보기에서만 노출되는 안내 문구 (PC 및 일정보기에서는 숨김) -->
+          <!-- 모바일 월간보기에서만 노출되는 안내 문구 -->
           <p id="guideText" class="text-[11px] text-slate-500 font-medium pl-4.5 sm:hidden">💡 일정을 터치하여 참석자를 확인해 보세요!</p>
         </div>
         
@@ -218,6 +218,17 @@
       return (await res.json()).items || [];
     }
 
+    // 일정 설명(본문) 하단에서 예약/대관 앞 2글자 추출 후 ' - XX 예약' 형태로 가공하는 함수
+    function formatEventDisplayTitle(evt) {
+      let baseTitle = evt.summary || '일정';
+      const desc = evt.description || '';
+      const match = desc.match(/([가-힣]{2})\s*(예약|대관)/);
+      if (match) {
+        baseTitle += ` - ${match[1]} 예약`;
+      }
+      return baseTitle;
+    }
+
     async function loadCalendarMonthData() {
       const y = currentViewDate.getFullYear(), m = currentViewDate.getMonth() + 1;
       calendarEventsList = await fetchEvents(new Date(y, m - 1, 1), new Date(y, m, 1)).catch(() => []);
@@ -311,11 +322,12 @@
         ['evt18', 'evt20'].forEach(key => {
           const evt = dayItem[key];
           if (evt) {
-            const shortTxt = evt.title.split(/[\s\n]+/)[0];
+            const formattedFullTitle = formatEventDisplayTitle(evt.raw);
+            const shortTxt = formattedFullTitle.split(/[\s\n]+/)[0];
             const bgClass = key === 'evt18' ? 'bg-emerald-100/80 border-emerald-300/70 text-emerald-950' : 'bg-amber-100/90 border-amber-300/80 text-amber-950';
             eventsHTML += `<div class="${bgClass} border px-0.5 py-0.5 rounded text-[10px] sm:text-xs leading-tight font-bold sm:line-clamp-2 sm:overflow-hidden sm:text-ellipsis sm:h-[2.3rem]">
               <span class="sm:hidden block text-center truncate" style="font-variant-numeric: tabular-nums;">${shortTxt}</span>
-              <span class="hidden sm:block text-left">${evt.title}</span>
+              <span class="hidden sm:block text-left">${formattedFullTitle}</span>
             </div>`;
           } else {
             eventsHTML += `<div class="opacity-0 border border-transparent px-0.5 py-0.5 rounded text-[10px] sm:text-xs leading-tight pointer-events-none select-none sm:h-[2.3rem]"><span class="sm:hidden block truncate">&nbsp;</span><span class="hidden sm:block">&nbsp;</span></div>`;
@@ -364,6 +376,7 @@
         grouped[dKey].forEach(evt => {
           const hour = new Date(evt.start?.dateTime || evt.start?.date).getHours();
           const is20 = hour >= 19;
+          const displayTitle = formatEventDisplayTitle(evt);
           const item = document.createElement('div');
           item.className = `p-2 sm:p-3 ${is20 ? 'bg-amber-100/80 border-amber-300/70 text-amber-950' : 'bg-emerald-100/70 border-emerald-300/60 text-emerald-950'} border rounded-xl sm:rounded-2xl flex items-center justify-between gap-2.5 shadow-2xs transition`;
           item.innerHTML = `
@@ -374,7 +387,7 @@
               </div>
               <div class="space-y-0.5 min-w-0">
                 <span class="inline-block px-1.5 py-0.2 ${is20 ? 'bg-orange-500' : 'bg-emerald-600'} text-white rounded-md text-[9px] font-black shadow-xs">${is20 ? '20시' : '18시'}</span>
-                <p class="font-bold text-xs sm:text-sm break-words">${evt.summary || '일정'}</p>
+                <p class="font-bold text-xs sm:text-sm break-words">${displayTitle}</p>
               </div>
             </div>`;
           listWrapper.appendChild(item);
@@ -391,8 +404,8 @@
         if (!startRaw) return;
         const dKey = startRaw.substring(0, 10);
         if (!map[dKey]) map[dKey] = { evt18: null, evt20: null };
-        if (new Date(startRaw).getHours() >= 19) map[dKey].evt20 = { title: evt.summary || '일정' };
-        else map[dKey].evt18 = { title: evt.summary || '일정' };
+        if (new Date(startRaw).getHours() >= 19) map[dKey].evt20 = { raw: evt };
+        else map[dKey].evt18 = { raw: evt };
       });
       return map;
     }
@@ -402,8 +415,14 @@
       document.getElementById('modalDateTitle').innerText = `${parts[0]}년 ${parseInt(parts[1])}월 ${parseInt(parts[2])}일`;
       
       let html = '';
-      if (dayItem.evt18) html += `<div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl space-y-1"><span class="inline-block px-2 py-0.5 bg-emerald-600 text-white rounded-md text-[10px] font-black">18시 일정</span><p class="font-bold text-slate-800 text-sm sm:text-base">${dayItem.evt18.title}</p></div>`;
-      if (dayItem.evt20) html += `<div class="p-2.5 bg-amber-50 border border-amber-200 rounded-xl space-y-1"><span class="inline-block px-2 py-0.5 bg-orange-500 text-white rounded-md text-[10px] font-black">20시 일정</span><p class="font-bold text-slate-800 text-sm sm:text-base">${dayItem.evt20.title}</p></div>`;
+      if (dayItem.evt18) {
+        const title18 = formatEventDisplayTitle(dayItem.evt18.raw);
+        html += `<div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl space-y-1"><span class="inline-block px-2 py-0.5 bg-emerald-600 text-white rounded-md text-[10px] font-black">18시 일정</span><p class="font-bold text-slate-800 text-sm sm:text-base">${title18}</p></div>`;
+      }
+      if (dayItem.evt20) {
+        const title20 = formatEventDisplayTitle(dayItem.evt20.raw);
+        html += `<div class="p-2.5 bg-amber-50 border border-amber-200 rounded-xl space-y-1"><span class="inline-block px-2 py-0.5 bg-orange-500 text-white rounded-md text-[10px] font-black">20시 일정</span><p class="font-bold text-slate-800 text-sm sm:text-base">${title20}</p></div>`;
+      }
       
       document.getElementById('modalContentBody').innerHTML = html;
       document.getElementById('eventModal').classList.remove('hidden');
@@ -511,11 +530,11 @@
             y: { 
               grid: { display: false },
               ticks: {
-                autoSkip: false, // 👇 라벨을 건너뛰지 않고 10개 전부 표시
+                autoSkip: false,
                 font: {
                   family: 'Pretendard',
                   weight: 'bold',
-                  size: 10 // 모바일에서 10개가 다 들어가도록 폰트 크기 최적화
+                  size: 10
                 }
               }
             } 
