@@ -8,6 +8,22 @@
   <link rel="icon" href="https://emojicdn.elk.sh/🎾">
   <link rel="apple-touch-icon" href="https://emojicdn.elk.sh/🎾">
   
+  <!-- PWA 앱 설치 지원을 위한 매니페스트 및 테마 설정 -->
+  <meta name="theme-color" content="#f97316">
+  <link rel="manifest" href='data:application/manifest+json,{
+    "name": "여울귀신 일정표",
+    "short_name": "여울귀신",
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "#f8fafc",
+    "theme_color": "#f97316",
+    "icons": [{
+      "src": "https://emojicdn.elk.sh/🎾",
+      "sizes": "192x192",
+      "type": "image/png"
+    }]
+  }'>
+
   <meta property="og:title" content="여울귀신 일정표">
   <meta property="og:description" content="구글 캘린더 일정을 실시간 분석합니다.">
 
@@ -204,6 +220,14 @@
       document.getElementById('startMonthInput').value = fmtYM(new Date(now.getFullYear(), now.getMonth() - 2, 1));
       loadCalendarMonthData();
       loadStatsData();
+
+      // 서비스 워커 등록 (PWA 설치 프롬프트 지원)
+      if ('serviceWorker' in navigator) {
+        const swCode = "self.addEventListener('fetch', function(event) {});";
+        const swBlob = new Blob([swCode], { type: 'text/javascript' });
+        const swUrl = URL.createObjectURL(swBlob);
+        navigator.serviceWorker.register(swUrl).catch(() => {});
+      }
     };
 
     function fmtYM(date) {
@@ -223,10 +247,9 @@
 
     function parseReservationTag(descriptionText) {
       if (!descriptionText) return '';
-      // 앞 공백을 무시하고 맨 처음 등장하는 한글 2글자를 추출
       const match = descriptionText.trim().match(/^([가-힣]{2})/);
       if (match) {
-        return match[1];
+        return match[1]; 
       }
       return '';
     }
@@ -425,6 +448,7 @@
         });
       });
 
+      container.innerHTML = '';
       container.appendChild(listWrapper);
     }
 
