@@ -8,24 +8,24 @@
   <link rel="icon" href="https://emojicdn.elk.sh/🎾">
   <link rel="apple-touch-icon" href="https://emojicdn.elk.sh/🎾">
   
-  <!-- PWA 앱 설치 지원을 위한 매니페스트 및 테마 설정 -->
-  <meta name="theme-color" content="#f97316">
-  <link rel="manifest" href='data:application/manifest+json,{
-    "name": "여울귀신 일정표",
-    "short_name": "여울귀신",
-    "start_url": "./",
-    "display": "standalone",
-    "background_color": "#f8fafc",
-    "theme_color": "#f97316",
-    "icons": [{
-      "src": "https://emojicdn.elk.sh/🎾",
-      "sizes": "192x192",
-      "type": "image/png"
-    }]
-  }'>
-
   <meta property="og:title" content="여울귀신 일정표">
   <meta property="og:description" content="구글 캘린더 일정을 실시간 분석합니다.">
+  <meta property="og:type" content="website">
+
+  <!-- PWA 앱 설치를 위한 완벽한 매니페스트 설정 -->
+  <link rel="manifest" href="data:application/manifest+json;charset=utf-8,{
+    %22name%22: %22여울귀신 일정표%22,
+    %22short_name%22: %22여울귀신%22,
+    %22start_url%22: %22./%22,
+    %22display%22: %22standalone%22,
+    %22background_color%22: %22%23f8fafc%22,
+    %22theme_color%22: %22%23ffedd5%22,
+    %22icons%22: [{
+      %22src%22: %22https://emojicdn.elk.sh/🎾%22,
+      %22sizes%22: %22512x512%22,
+      %22type%22: %22image/png%22
+    }]
+  }">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -220,14 +220,6 @@
       document.getElementById('startMonthInput').value = fmtYM(new Date(now.getFullYear(), now.getMonth() - 2, 1));
       loadCalendarMonthData();
       loadStatsData();
-
-      // 서비스 워커 등록 (PWA 설치 프롬프트 지원)
-      if ('serviceWorker' in navigator) {
-        const swCode = "self.addEventListener('fetch', function(event) {});";
-        const swBlob = new Blob([swCode], { type: 'text/javascript' });
-        const swUrl = URL.createObjectURL(swBlob);
-        navigator.serviceWorker.register(swUrl).catch(() => {});
-      }
     };
 
     function fmtYM(date) {
@@ -448,7 +440,6 @@
         });
       });
 
-      container.innerHTML = '';
       container.appendChild(listWrapper);
     }
 
